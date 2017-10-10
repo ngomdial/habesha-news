@@ -11,6 +11,7 @@ exports.create = user_id => {
 exports.findOne = query => {
     return Profile
         .findOne(query)
+        .populate('user')
         .exec();
 };
 

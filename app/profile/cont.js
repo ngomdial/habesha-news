@@ -28,6 +28,4 @@ exports.validateOne = (req, res, next, profileId) => {
         });
 };
 
-exports.getOne = (req, res) => {
-    result.data(req.profile, res);
-};
+exports.getOne = (req, res) => result.data(req.profile, res);

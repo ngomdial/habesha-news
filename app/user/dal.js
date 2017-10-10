@@ -4,24 +4,10 @@ const User = require('./model');
 const result = require('../../util/res');
 const Promise = require('bluebird');
 
-exports.create = (username, email, password) => {
-    return new User({username, email, password}).save();
-};
+exports.create = (username, email, password) => new User({username, email, password}).save();
 
-exports.update = user => {
-    console.log(user);
-    return user.save();
-};
+exports.update = user => user.save();
 
-exports.findOne = query => {
-    return User
-        .findOne(query)
-        .populate('profile')
-        .exec();
-};
+exports.findOne = query => User.findOne(query).populate('profile').exec();
 
-exports.findAll = () => {
-    return User
-        .find()
-        .exec();
-};
+exports.findAll = () => User.find().exec();

@@ -18,6 +18,4 @@ app.use(bearerToken());
 // TODO: Setup middleware
 app.use(base_url, require('./routes'));
 
-app.listen(port, () => {
-    log.i(`Habesha News API running on port ${port}`);
-});
+app.listen(port, () => log.i(`Habesha News API running on port ${port}`));

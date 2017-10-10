@@ -19,32 +19,13 @@ function Log(app) {
     app.use(morgan(morganFormat));
 }
 
-const show = (level, message) => {
-    logger.log(level, message);
-};
+const show = (level, message) => logger.log(level, message);
 
-Log.e = message => {
-    show('error', message);
-};
-
-Log.w = message => {
-    show('warn', message);
-};
-
-Log.i = message => {
-    show('info', message);
-};
-
-Log.v = message => {
-    show('verbose', message);
-};
-
-Log.d = message => {
-    show('debug', message);
-};
-
-Log.s = message => {
-    show('silly', message);
-};
+Log.e = message => show('error', message);
+Log.w = message => show('warn', message);
+Log.i = message => show('info', message);
+Log.v = message => show('verbose', message);
+Log.d = message => show('debug', message);
+Log.s = message => show('silly', message);
 
 module.exports = Log;

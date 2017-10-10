@@ -24,12 +24,8 @@ exports.login = (req, res) => {
                 return helper.genSalt();
             }
         })
-        .then(salt => {
-            return helper.hashPassword(data.password, salt);
-        })
-        .then(() => {
-            return helper.comparePassword(data.password, user.password);
-        })
+        .then(salt => helper.hashPassword(data.password, salt))
+        .then(() => helper.comparePassword(data.password, user.password))
         .then(valid => {
             if (valid) {
                 return helper.generateToken(user);
@@ -37,12 +33,8 @@ exports.login = (req, res) => {
                 return Promise.reject(result.reject('Invalid username or password'));
             }
         })
-        .then(token => {
-            result.data({token, user}, res);
-        })
-        .catch(reject => {
-            result.errorReject(reject, res);
-        });
+        .then(token => result.data({token, user}, res))
+        .catch(reject => result.errorReject(reject, res));
 };
 
 exports.signUp = (req, res) => {
@@ -67,12 +59,8 @@ exports.signUp = (req, res) => {
                 return Promise.reject(result.reject('This username already exists'));
             }
         })
-        .then(salt => {
-            return helper.hashPassword(data.password, salt);
-        })
-        .then(hash => {
-            return userDal.create(data.username, data.email, hash);
-        })
+        .then(salt => helper.hashPassword(data.password, salt))
+        .then(hash => userDal.create(data.username, data.email, hash))
         .then(user => {
             data = user;
             return profileDal.create(user._id);
@@ -81,22 +69,14 @@ exports.signUp = (req, res) => {
             data.profile = profile;
             return userDal.update(data);
         })
-        .then(user => {
-            result.dataStatus(user, 201, res);
-        })
-        .catch(reject => {
-            result.errorReject(reject, res);
-        });
+        .then(user => result.dataStatus(user, 201, res))
+        .catch(reject => result.errorReject(reject, res));
 };
 
 exports.findAll = (req, res) => {
     userDal.findAll()
-        .then(users => {
-            result.data(users, res);
-        })
-        .catch(reject => {
-            result.errorReject(reject, res);
-        });
+        .then(users => result.data(users, res))
+        .catch(reject => result.errorReject(reject, res));
 };
 
 exports.validateOne = (req, res, next, userId) => {
@@ -111,6 +91,4 @@ exports.validateOne = (req, res, next, userId) => {
         });
 };
 
-exports.getOne = (req, res) => {
-    result.data(req.user, res);
-};
+exports.getOne = (req, res) => result.data(req.user, res);

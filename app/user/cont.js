@@ -63,3 +63,19 @@ exports.findAll = (req, res) => {
             result.errorReject(reject, res);
         });
 };
+
+exports.validateOne = (req, res, next, userId) => {
+    userDal.findOne({_id: userId})
+        .then(user => {
+            if (user) {
+                req.user = user;
+                next();
+            } else {
+                result.errorStatus(`User with _id ${userId} does not exist`, 404, res);
+            }
+        });
+};
+
+exports.getOne = (req, res) => {
+    result.data(req.user, res);
+};

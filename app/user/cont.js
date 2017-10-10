@@ -8,14 +8,49 @@ const result = require('../../util/res');
 const log = require('../../util/log');
 const helper = require('../../util/signup_helper');
 
+exports.login = (req, res) => {
+    let body = req.body,
+        data, user;
+    helper.hasLoginCredentials(body)
+        .then(loginData => {
+            data = loginData;
+            return userDal.findOne({username: data.username});
+        })
+        .then(existing => {
+            if (!existing) {
+                return Promise.reject(result.reject('Invalid username or password'));
+            } else {
+                user = existing;
+                return helper.genSalt();
+            }
+        })
+        .then(salt => {
+            return helper.hashPassword(data.password, salt);
+        })
+        .then(() => {
+            return helper.comparePassword(data.password, user.password);
+        })
+        .then(valid => {
+            if (valid) {
+                return helper.generateToken(user);
+            } else {
+                return Promise.reject(result.reject('Invalid username or password'));
+            }
+        })
+        .then(token => {
+            result.data({token, user}, res);
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
+};
+
 exports.signUp = (req, res) => {
     let body = req.body;
     let data;
     helper.hasSignUpCredentials(body)
         .then(signUpData => {
             data = signUpData;
-        })
-        .then(() => {
             return userDal.findOne({email: data.email})
         })
         .then(user => {

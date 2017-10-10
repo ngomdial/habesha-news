@@ -19,11 +19,11 @@ be decomposed into a microservices architecture.
 
     Profile
         - _id
-        * user
         - picture_url
-        * categories
         - notification_toggle
         - active
+        * user
+        * categories
         - created_at
         - updated_at
 
@@ -33,10 +33,10 @@ be decomposed into a microservices architecture.
         - source_url
         - image_url
         - summary
+        - status
         * category
         * poster
         * article_data
-        - status
         - created_at
         - updated_at
 
@@ -77,6 +77,6 @@ be decomposed into a microservices architecture.
         - type
         - category
         - message
+        * user
         - created_at
         - updated_at
-        * user

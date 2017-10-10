@@ -24,9 +24,11 @@
     "express": "^4.16.2",
     "express-bearer-token": "^2.1.0",
     "jsonwebtoken": "^8.1.0",
+    "moment": "^2.19.0",
     "mongoose": "^4.12.1",
     "mongoose-hidden": "^1.4.2",
     "morgan": "^1.9.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "winston": "^2.4.0"
   }
 }

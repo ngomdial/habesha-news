@@ -68,6 +68,3 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
-
-# Environment variables
-.env

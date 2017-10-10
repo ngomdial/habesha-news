@@ -22,3 +22,27 @@ exports.hasSignUpCredentials = body => {
         resolve({email, username, password});
     });
 };
+
+exports.hashPassword = (password, salt) => {
+    return new Promise((resolve, reject) => {
+        bcrypt.hash(password, salt, null, (err, hash) => {
+            if (err) {
+                reject(result.reject(`Hashing password failed: ${err}`));
+            } else {
+                resolve(hash);
+            }
+        })
+    });
+};
+
+exports.genSalt = () => {
+    return new Promise((resolve, reject) => {
+        bcrypt.genSalt(WORK_FACTOR, (err, salt) => {
+            if (err) {
+                reject(result.reject(`Salt generation failed: ${err}`));
+            } else {
+                resolve(salt);
+            }
+        });
+    });
+};

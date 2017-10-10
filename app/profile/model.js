@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const profileSchema = new Schema({
-        picture_url:            {type: String},
+        picture_url:            {type: String, default: "-"},   // TODO: Point to default picture URL if not provided
         enable_notifications:   {type: Boolean, default: true},
         active:                 {type: Boolean, default: true},
         user:                   {type: Schema.Types.ObjectId, ref: 'User', required: true},

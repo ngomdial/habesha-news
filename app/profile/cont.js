@@ -2,7 +2,7 @@
 
 const profileDal = require('./dal');
 
-const result = require('../../util/res');
 const Promise = require('bluebird');
+const result = require('../../util/res');
 const log = require('../../util/log');
 

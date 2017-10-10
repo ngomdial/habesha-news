@@ -3,7 +3,7 @@
 const winston = require('winston');
 const morgan = require('morgan');
 const moment = require('moment');
-const morganFormat = `:date[iso] - router: habesha-news-api /:method :url HTTP/:http-version :status :response-time ms - :res[content-length]`;
+const morganFormat = `:date[iso] - /:method :url HTTP/:http-version :status :response-time ms - :res[content-length]`;
 
 const logger = new (winston.Logger)({
     transports: [

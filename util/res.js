@@ -1,5 +1,7 @@
 'use strict';
 
+const log = require('./log');
+
 exports.data = (payload, res) => {
     res.status(200).json(payload);
 };
@@ -38,5 +40,8 @@ exports.rejectStatus = (message, status) => {
 
 exports.send = (error, message, status, res) => {
     let data = {error, message, status};
+    if (error) {
+        log.e(JSON.stringify(message, null, 3));
+    }
     res.status(status).json(data);
 };

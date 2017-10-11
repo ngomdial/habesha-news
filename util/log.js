@@ -15,7 +15,7 @@ const logger = new (winston.Logger)({
     ]
 });
 
-function Log(app) {
+function Log(app) {             // TODO: Turn off morgan when tests are running
     app.use(morgan(morganFormat));
 }
 

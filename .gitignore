@@ -68,3 +68,7 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Build artifacts and environment variables
+/*.env
+.DS_Store

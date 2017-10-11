@@ -4,7 +4,6 @@
 #
 version: 2
 jobs:
-  - echo "-->> Preparing build environment..."
   build:
     - echo "-->> Setting up working directory..."
     working_directory: ~/repo

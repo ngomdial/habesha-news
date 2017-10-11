@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
         author:     process.env.AUTHOR,
         version:    process.env.VERSION,
         port:       process.env.PORT,
+        env:       process.env.NODE_ENV,
         base_url:   process.env.BASE_URL + '/' + process.env.VERSION
     });
 });

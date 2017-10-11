@@ -18,11 +18,14 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
       # Install all needed dependencies
       - run:
           name: Installing npm dependencies
           command: npm install
+      # Run app tests
+      - run:
+          name: Running app tests
+          command: npm test
       # Save the cache for faster builds
       - save_cache:
           paths:
@@ -34,9 +37,3 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
-      - run:
-          name: Running app tests
-          command: npm test
-      - run:
-          name: Generating test coverage report
-          command: './node_modules/.bin/nyc report --reporter=text-lcov'

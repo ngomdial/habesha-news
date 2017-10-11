@@ -4,11 +4,8 @@
 #
 version: 2
 jobs:
-#  - echo "-->> Preparing build environment..."
   build:
-#    - echo "-->> Setting up working directory..."
     working_directory: ~/repo
-#    - echo "-->> Installing node and mongo Docker images..."
     docker:
       # Docker images for node and mongodb
       - image: circleci/node:7.10
@@ -16,7 +13,6 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
-#      - echo "-->> Restoring node dependency caches (if any)..."
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
@@ -24,36 +20,23 @@ jobs:
           - v1-dependencies-
 
       # Install all needed dependencies
-#      - echo "-->> Installing npm dependencies..."
       - run:
-          name: Install npm dependencies
+          name: Installing npm dependencies
           command: npm install
       # Save the cache for faster builds
-#      - echo "-->> Saving node dependency caches (if any)..."
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       # Start node app
-#      - run:
-#          name: Start app
-#          command: npm start
-
-  test:
-    docker:
-      # Docker test images for node and mongodb
-      - image: circleci/node:7.10
-      - image: circleci/mongo:3.4.4
-    steps:
-      - checkout
       - run:
-          name: Install npm dependencies
-          command: npm install
+          name: Start app
+          command: npm start
       - run:
-          name: app tests
+          name: Running app tests
           command: npm test
       - run:
-          name: Generate test coverage report
+          name: Generating test coverage report
           command: './node_modules/.bin/nyc report --reporter=text-lcov'
       - store_artifacts:
           path: test-results.xml
@@ -61,15 +44,25 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
-      - test:
-          requires:
-            - build
-          filters:
-            branches:
-              only: develop
+#  test:
+#    docker:
+#      # Docker test images for node and mongodb
+#      - image: circleci/node:7.10
+#      - image: circleci/mongo:3.4.4
+#    steps:
+#      - checkout
+#      - run:
+#          name: Install npm dependencies
+#          command: npm install
+#
+#workflows:
+#  version: 2
+#  build_and_test:
+#    jobs:
+#      - build
+#      - test:
+#          requires:
+#            - build
+#          filters:
+#            branches:
+#              only: develop

@@ -11,9 +11,11 @@ const articleSchema = new Schema({
         status:     {type: String, default: 'pending'},     // TODO: Come up with a specific list of article statuses
         category:   {type: Schema.Types.ObjectId, ref: 'Category', required: true},
         poster:     {type: Schema.Types.ObjectId, ref: 'User', required: true},
-        data:       {type: Schema.Types.ObjectId, ref: 'ArticleData', required: true}
+        data:       {type: Schema.Types.ObjectId, ref: 'ArticleData'}
     },
     {
         timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
     }
 );
+
+module.exports = mongoose.model('Article', articleSchema);

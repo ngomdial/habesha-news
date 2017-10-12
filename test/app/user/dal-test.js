@@ -99,4 +99,8 @@ describe('user dal.js', () => {
                 expect(users).to.have.lengthOf(2);
             });
     });
+
+    after(() => {
+        mongoose.disconnect();
+    });
 });

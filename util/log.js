@@ -4,6 +4,7 @@ const winston = require('winston');
 const morgan = require('morgan');
 const moment = require('moment');
 const morganFormat = `:date[iso] - /:method :url HTTP/:http-version :status :response-time ms - :res[content-length]`;
+const env = process.env.NODE_ENV;
 
 const logger = new (winston.Logger)({
     transports: [
@@ -15,11 +16,15 @@ const logger = new (winston.Logger)({
     ]
 });
 
-function Log(app) {             // TODO: Turn off morgan when tests are running
+function Log(app) {
     app.use(morgan(morganFormat));
 }
 
-const show = (level, message) => logger.log(level, message);
+const show = (level, message) => {
+    if (env !== 'test') {
+        logger.log(level, message);
+    }
+};
 
 Log.e = message => show('error', message);
 Log.w = message => show('warn', message);

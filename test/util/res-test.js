@@ -127,7 +127,6 @@ describe('res.json', () => {
 
             sinon.assert.calledWithExactly(response.errorReject, reject, res);
             sinon.assert.calledWithExactly(response.send, true, message, 400, res);
-
             done();
         });
     });
@@ -176,7 +175,6 @@ describe('res.json', () => {
 
         sinon.assert.calledWithExactly(response.send, error, message, status, res);
         sandbox.restore();
-
         done();
     });
 });

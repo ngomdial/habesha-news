@@ -6,6 +6,6 @@ mongoose.Promise = require('bluebird');
 const url = process.env.DATABASE_URL;
 
 mongoose
-    .createConnection(url, {useMongoClient: true})
+    .connect(url, {useMongoClient: true})
     .then(() => {})
-    .catch(err => console.error(err));
+    .catch(err => console.error('Database connection failed', err));

@@ -36,7 +36,7 @@ be decomposed into a microservices architecture.
         - status
         * category
         * poster
-        * article_data
+        * data
         - created_at
         - updated_at
 

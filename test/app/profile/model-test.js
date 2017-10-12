@@ -12,7 +12,7 @@ describe('profile mode.js', () => {
         sandbox.restore();
     });
 
-    it('Should fail upon saving, if user does not exist', done => {
+    it('Should fail upon saving, if user is missing', done => {
         let profile = new Profile();
 
         profile.validate(err => {

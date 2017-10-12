@@ -20,3 +20,5 @@ app.use(bearerToken());
 app.use(base_url, require('./routes'));
 
 app.listen(port, () => log.i(`Habesha News API running in [${env}] on port ${port}`));
+
+module.exports = app;

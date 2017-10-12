@@ -1,8 +1,6 @@
 'use strict';
 
-const Promise = require('bluebird');
-require('dotenv').config();
-require('../../../config/index');
+require('../../config/index');
 
 const mongoose = require('mongoose');
 
@@ -34,8 +32,6 @@ describe('profile dal.js', () => {
     });
 
     after(() => {
-        mongoose.disconnect(err => {
-            console.error(err);
-        });
+        mongoose.disconnect();
     });
 });

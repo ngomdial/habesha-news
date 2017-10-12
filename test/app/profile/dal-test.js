@@ -80,8 +80,4 @@ describe('profile dal.js', () => {
                 expect(profiles).to.have.lengthOf(2);
             });
     });
-
-    after(() => {
-        mongoose.disconnect();
-    });
 });

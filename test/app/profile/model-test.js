@@ -7,7 +7,7 @@ const sandbox = sinon.createSandbox();
 
 const Profile = require('../../../app/profile/model');
 
-describe('profile mode.js', () => {
+describe('profile model.js', () => {
     afterEach(() => {
         sandbox.restore();
     });

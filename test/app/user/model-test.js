@@ -7,7 +7,7 @@ const sandbox = sinon.createSandbox();
 
 const User = require('../../../app/user/model');
 
-describe('user mode.js', () => {
+describe('user model.js', () => {
 
     afterEach(() => {
         sandbox.restore();
@@ -39,4 +39,15 @@ describe('user mode.js', () => {
             done();
         });
     });
+
+    it('Should fail upon saving, if username, email and password are missing', done => {
+        let user = new User();
+
+        user.validate(err => {
+            expect(err.errors.username).to.exist;
+            expect(err.errors.email).to.exist;
+            expect(err.errors.password).to.exist;
+            done();
+        });
+    })
 });

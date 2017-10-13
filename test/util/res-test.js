@@ -5,9 +5,8 @@ const response = require('../../util/res');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
 
-describe('res.json', () => {
+describe('rest.js', () => {
     let payload = {
         username: "saladthieves",
         password: "something_new",
@@ -17,8 +16,13 @@ describe('res.json', () => {
         status: code => res,
         json: data => {}
     };
+    let sandbox;
 
     describe('dataTests', () => {
+        beforeEach(() => {
+            sandbox = sinon.createSandbox();
+        });
+
         afterEach(() => {
             sandbox.restore();
         });
@@ -56,6 +60,7 @@ describe('res.json', () => {
         const message = 'Invalid username or password';
 
         beforeEach(() => {
+            sandbox = sinon.createSandbox();
             sandbox.spy(response, 'send');
         });
 
@@ -90,6 +95,7 @@ describe('res.json', () => {
         const message = 'This username is already taken';
 
         beforeEach(() => {
+            sandbox = sinon.createSandbox();
             sandbox.spy(response, 'send');
         });
 
@@ -135,6 +141,7 @@ describe('res.json', () => {
         const message = 'This email is already registered';
 
         beforeEach(() => {
+            sandbox = sinon.createSandbox();
             sandbox.spy(response, 'send');
         });
 
@@ -163,6 +170,8 @@ describe('res.json', () => {
     });
 
     it('Calls send(error, message, status, res)', done => {
+        sandbox = sinon.createSandbox();
+
         sandbox.spy(response, 'send');
         sandbox.spy(res, 'status');
         sandbox.spy(res, 'json');
@@ -174,6 +183,7 @@ describe('res.json', () => {
         response.send(error, message, status, res);
 
         sinon.assert.calledWithExactly(response.send, error, message, status, res);
+
         sandbox.restore();
         done();
     });

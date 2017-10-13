@@ -36,8 +36,8 @@ describe('profile dal.js', () => {
     it('Calls findOne(query)', () => {
         return dal
             .create(user_id)
-            .then(user => {
-                console.log('Created user:\n' + user);
+            .then(profile => {
+                console.log('Created profile:\n' + profile);
                 return dal.findOne({user: user_id});
             })
             .then(profile => {

@@ -59,8 +59,8 @@ be decomposed into a microservices architecture.
         - _id
         - message
         * poster
-        * likers
-        * dislikers
+        * likes
+        * dislikes
         - created_at
         - updated_at
 

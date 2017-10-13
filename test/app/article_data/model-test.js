@@ -3,21 +3,27 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
+const Promise = require('bluebird');
 
 const ArticleData = require('../../../app/article_data/model');
 
 describe('article data model.js', () => {
-    afterEach(() => {
-        sandbox.restore();
+    let sandbox;
+
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
     });
 
-    it('Should fail upon saving, if article is missing', done => {
+    it('Should fail upon saving, if article is missing', () => {
         let articleData = new ArticleData();
-
-        articleData.validate(err => {
-            expect(err.errors.article).to.exist;
-            done();
+        return Promise.resolve(() => {
+            articleData.validate(err => {
+                expect(err.errors.article).to.exist;
+            });
         });
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 });

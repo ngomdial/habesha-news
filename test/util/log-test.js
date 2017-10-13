@@ -2,54 +2,61 @@
 
 const sinon = require('sinon');
 const log = require('../../util/log');
+const Promise = require('bluebird');
 
 describe('log.js', () => {
-    let sandbox;
     const message = 'This is a log message';
+    let sandbox;
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
         sandbox.spy(log, 'show');
     });
 
+    it('Should call Log.e(error, message)', () => {
+        log.e(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'error', message);
+        });
+    });
+
+    it('Should call Log.w(warn, message)', () => {
+        log.w(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'warn', message);
+        });
+    });
+
+    it('Should call Log.i(warn, message)', () => {
+        log.i(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'info', message);
+        });
+    });
+
+    it('Should call Log.v(warn, message)', () => {
+        log.v(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'verbose', message);
+        });
+    });
+
+    it('Should call Log.d(warn, message)', () => {
+        log.d(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'debug', message);
+        });
+    });
+
+    it('Should call Log.s(warn, message)', () => {
+        log.s(message);
+        return Promise.resolve(() => {
+            sinon.assert.calledWithExactly(log.show, 'silly', message);
+        });
+    });
+
     afterEach(() => {
         sandbox.restore();
-    });
-
-    it('Should call Log.e(error, message)', done => {
-        log.e(message);
-        sinon.assert.calledWithExactly(log.show, 'error', message);
-        done();
-    });
-
-    it('Should call Log.w(warn, message)', done => {
-        log.w(message);
-        sinon.assert.calledWithExactly(log.show, 'warn', message);
-        done();
-    });
-
-    it('Should call Log.i(warn, message)', done => {
-        log.i(message);
-        sinon.assert.calledWithExactly(log.show, 'info', message);
-        done();
-    });
-
-    it('Should call Log.v(warn, message)', done => {
-        log.v(message);
-        sinon.assert.calledWithExactly(log.show, 'verbose', message);
-        done();
-    });
-
-    it('Should call Log.d(warn, message)', done => {
-        log.d(message);
-        sinon.assert.calledWithExactly(log.show, 'debug', message);
-        done();
-    });
-
-    it('Should call Log.s(warn, message)', done => {
-        log.s(message);
-        sinon.assert.calledWithExactly(log.show, 'silly', message);
-        done();
     });
 });
 

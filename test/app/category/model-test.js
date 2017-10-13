@@ -4,14 +4,14 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 const Promise = require('bluebird');
-const sandbox = sinon.createSandbox();
 
 const Category = require('../../../app/category/model');
 
 describe('category model.js', () => {
+    let sandbox;
 
-    afterEach(() => {
-        sandbox.restore();
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
     });
 
     it('Should fail upon saving, if name is missing', () => {
@@ -22,5 +22,9 @@ describe('category model.js', () => {
                 expect(err.errors.name).to.exist;
             });
         });
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 });

@@ -3,14 +3,15 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
 const Promise = require('bluebird');
 
 const Comment = require('../../../app/comment/model');
 
 describe('comment model.js', () => {
-    afterEach(() => {
-        sandbox.restore();
+    let sandbox;
+
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
     });
 
     it('Should fail upon saving, if message is missing', () => {
@@ -31,5 +32,9 @@ describe('comment model.js', () => {
                 expect(err.errors.poster).to.exist;
             });
         });
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 });

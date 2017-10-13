@@ -14,10 +14,6 @@ describe('warning model.js', () => {
         sandbox = sinon.createSandbox();
     });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
-
     it('Should fail upon saving, if message is missing', () => {
         let warning = new Warning();
 
@@ -46,5 +42,9 @@ describe('warning model.js', () => {
                 expect(err.errors.article).to.exist;
             });
         });
+    });
+
+    afterEach(() => {
+        sandbox.restore();
     });
 });

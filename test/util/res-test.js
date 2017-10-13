@@ -17,6 +17,7 @@ describe('res.js', () => {
         status: code => res,
         json: data => {}
     };
+
     let sandbox;
 
     describe('dataTests', () => {
@@ -188,6 +189,11 @@ describe('res.js', () => {
             return Promise.resolve(() => {
                 sinon.assert.calledWithExactly(response.send, error, message, status, res);
             });
+        });
+
+        it('finishes everything up', done => {
+            sinon.assert.match(true, true);
+            done();
         });
 
         afterEach(() => {

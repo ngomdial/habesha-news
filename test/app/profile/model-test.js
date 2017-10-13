@@ -3,11 +3,15 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const sandbox = sinon.createSandbox();
 
 const Profile = require('../../../app/profile/model');
 
 describe('profile model.js', () => {
+    let sandbox;
+    beforeEach(() => {
+        sandbox = sinon.createSandbox();
+    });
+
     afterEach(() => {
         sandbox.restore();
     });

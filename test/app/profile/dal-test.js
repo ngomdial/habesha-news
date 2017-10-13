@@ -36,10 +36,12 @@ describe('profile dal.js', () => {
     it('Calls findOne(query)', () => {
         return dal
             .create(user_id)
-            .then(() => {
+            .then(profile => {
+                console.log('Created profile:\n' + profile);
                 return dal.findOne({user: user_id});
             })
             .then(profile => {
+                console.log('Found profile:\n' + profile);
                 expect(profile).to.be.a('object');
                 sinon.assert.match(profile.user.toString(), user_id);
             });

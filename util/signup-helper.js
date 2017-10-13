@@ -82,3 +82,5 @@ exports.generateToken = input => {
     let token = jwt.sign(data, process.env.API_JWT_USER_SECRET);
     return Promise.resolve(token);
 };
+
+// TODO: Write token validation logic

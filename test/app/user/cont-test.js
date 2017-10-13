@@ -23,84 +23,87 @@ describe('user cont.js', () => {
         return User.remove({}).exec().then(() => Profile.remove({}).exec());
     });
 
-
-    describe('registration', () => {    // TODO: Change to promises
-        let signup_url = base_url + '/users/signup';
+    describe('login test', () => {
+        let login_url = base_url + '/users/login';
 
         beforeEach(() => {
             return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
-        it('Should fail registration if body is empty', done => {
-            let data = {};
+        it('Should login if a user has all the details', done => {
+            let data = {email, username, password};
+            chai.request(app).post(base_url + '/users/signup').send(data)
+                .end(() => {
+                    chai.request(app)
+                        .post(login_url)
+                        .send({username, password})
+                        .end((err, res) => {
+                            body = res.body;
 
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end((err, res) => {
-                    body = res.body;
-
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message');
-                    expect(body).to.have.property('status').equal(400);
-                    done();
+                            expect(res.status).to.equal(200);
+                            expect(body).to.be.a('object');
+                            expect(body).to.have.property('token');
+                            expect(body.user).to.have.property('username').to.equal(username);
+                            expect(body.user).to.have.property('email').to.equal(email);
+                            expect(body.user).to.have.property('profile').to.have.property('user');
+                            done();
+                        });
                 });
         });
 
-        it('Should fail registration if email is missing', done => {
-            let data = {username, password};
+        it('Should fail login if the user has the wrong username', done => {
+            let data = {email, username, password};
+            chai.request(app).post(base_url + '/users/signup').send(data)
+                .end(() => {
+                    chai.request(app)
+                        .post(login_url)
+                        .send({username: 'cool_username', password})
+                        .end((err, res) => {
+                            body = res.body;
 
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end((err, res) => {
-                    body = res.body;
+                            expect(res.status).to.equal(400);
 
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message').contains('email');
-                    expect(body).to.have.property('status').equal(400);
-                    done();
+                            expect(body).to.be.a('object');
+                            expect(body).to.have.property('error').to.equal(true);
+                            expect(body).to.have.property('message');
+                            expect(body).to.have.property('status').to.be.equal(400);
+                            done();
+                        });
                 });
         });
 
-        it('Should fail registration if username is missing', done => {
-            let data = {email, password};
+        it('Should fail login if the user has the wrong password', done => {
+            let data = {email, username, password};
+            chai.request(app).post(base_url + '/users/signup').send(data)
+                .end(() => {
+                    chai.request(app)
+                        .post(login_url)
+                        .send({username, password: 'cool_passwd'})
+                        .end((err, res) => {
+                            body = res.body;
 
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end((err, res) => {
-                    body = res.body;
+                            expect(res.status).to.equal(400);
 
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message').contains('username');
-                    expect(body).to.have.property('status').equal(400);
-                    done();
+                            expect(body).to.be.a('object');
+                            expect(body).to.have.property('error').to.equal(true);
+                            expect(body).to.have.property('message');
+                            expect(body).to.have.property('status').to.be.equal(400);
+                            done();
+                        });
                 });
         });
 
-        it('Should fail registration if password is missing', done => {
-            let data = {email, username};
+        afterEach(() => {
+            return User.remove({}).exec().then(() => Profile.remove({}).exec());
+        });
+    });
 
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end((err, res) => {
-                    body = res.body;
 
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message').contains('password');
-                    expect(body).to.have.property('status').equal(400);
-                    done();
-                });
+    describe('registration test', () => {    // TODO: Change to promises
+        let signup_url = base_url + '/users/signup';
+
+        beforeEach(() => {
+            return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
         it('Should register if a user has all the details', done => {

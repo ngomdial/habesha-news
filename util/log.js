@@ -17,7 +17,9 @@ const logger = new (winston.Logger)({
 });
 
 function Log(app) {
-    app.use(morgan(morganFormat));
+    if (env !== 'test') {
+        app.use(morgan(morganFormat));
+    }
 }
 
 Log.e = message => Log.show('error', message);

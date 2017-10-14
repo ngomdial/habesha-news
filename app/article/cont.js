@@ -5,6 +5,36 @@ const articleDal = require('./dal');
 const result = require('../../util/res');
 const log = require('../../util/log');
 
+exports.create = (req, res) => {
+    let {
+        headline, source_url, image_url,
+        summary, category, user
+    } = req.body;
+
+    if (!headline || !headline.trim()) {
+        result.error('No headline provided', res);
+    }
+    if (!source_url || !source_url.trim()) {
+        result.error('No source_url provided', res);
+    }
+    if (!image_url || !image_url.trim()) {
+        result.error('No image_url provided', res);
+    }
+    if (!summary || !summary.trim()) {
+        result.error('No summary provided', res);
+    }
+    if (!category || !category.trim()) {
+        result.error('No category provided', res);
+    }
+    if (!user || !user.trim()) {
+        result.error('No user provided', res);
+    }
+
+
+
+    result.messageStatus('Article created', 201, res);
+};
+
 exports.findAll = (req, res) => {
     articleDal
         .findAll()

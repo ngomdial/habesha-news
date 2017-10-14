@@ -10,12 +10,12 @@ exports.hasRequiredFields = req => {
         helper.validateEmpty('image_url', 'No image_url provided', reject, req);
         helper.validateEmpty('summary', 'No summary provided', reject, req);
         helper.validateEmpty('category', 'No category provided', reject, req);
-        helper.validateEmpty('user', 'No user provided', reject, req);
+        helper.validateEmpty('poster', 'No poster provided', reject, req);
 
-        helper.sanitizeTrim(req, ['headline', 'source_url', 'image_url', 'summary', 'category', 'user']);
+        helper.sanitizeTrim(req, ['headline', 'source_url', 'image_url', 'summary', 'category', 'poster']);
 
-        let {headline, source_url, image_url, summary, category, user} = req.body;
+        let {headline, source_url, image_url, summary, category, poster} = req.body;
 
-        resolve({headline, source_url, image_url, summary, category, user});
+        resolve({headline, source_url, image_url, summary, category, poster});
     });
 };

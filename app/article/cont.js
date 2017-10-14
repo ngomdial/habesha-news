@@ -11,32 +11,38 @@ const log = require('../../util/log');
 const validator = require('./validator');
 
 exports.create = (req, res) => {
-    let category, user;
+    let headline, source_url, image_url, summary, category, poster;
 
     validator.hasRequiredFields(req)
         .then(data => {
+            headline = data.headline;
+            source_url = data.source_url;
+            image_url = data.image_url;
+            summary = data.summary;
             category = data.category;
-            user = data.user;
+            poster = data.poster;
             return categoryDal.findOne({_id: category});
         })
         .then(found => {
             if (!found) {
                 return Promise.reject(result.reject(`Category with _id ${category} does not exist`));
             } else {
-                return userDal.findOne({_id: user});
+                return userDal.findOne({_id: poster});
             }
         })
         .then(found => {
             if (!found) {
-                return Promise.reject(result.reject(`User with _id ${user} does not exist`));
+                return Promise.reject(result.reject(`User with _id ${poster} does not exist`));
             } else {
-                result.messageStatus('Article created!', 201, res);
+                return articleDal.create({headline, source_url, image_url, summary, category, poster});
             }
+        })
+        .then(article => {
+            result.dataStatus(article, 201, res);
         })
         .catch(reject => {
             result.errorReject(reject, res);
         });
-
 };
 
 exports.findAll = (req, res) => {

@@ -2,15 +2,16 @@
 
 const categoryDal = require('./dal');
 const result = require('../../util/res');
-const log = require('../../util/log');
+const validator = require('./validator');
 
 exports.create = (req, res) => {
-    let {name, color} = req.body;
-    if (!name || !name.trim()) {
-        result.error('No name provided', res);
-    }
-
-    categoryDal.findOne({name: name.toLowerCase()})
+    let name, color;
+    validator.hasRequiredFields(req)
+        .then(data => {
+            name = data.name;
+            color = data.color;
+            return categoryDal.findOne({name: name.toLowerCase()});
+        })
         .then(category => {
             if (category) {
                 return Promise.reject(result.reject(`Category with name ${name} already exists`));

@@ -14,12 +14,11 @@ describe('article data model.js', () => {
         sandbox = sinon.createSandbox();
     });
 
-    it('Should fail upon saving, if article is missing', () => {
+    it('Should fail upon saving, if article is missing', done => {
         let articleData = new ArticleData();
-        return Promise.resolve(() => {
-            articleData.validate(err => {
-                expect(err.errors.article).to.exist;
-            });
+        articleData.validate(err => {
+            expect(err.errors.article).to.exist;
+            done();
         });
     });
 

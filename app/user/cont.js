@@ -90,4 +90,4 @@ exports.validateOne = (req, res, next, userId) => {
         });
 };
 
-exports.getOne = (req, res) => result.data(req.user, res);
+exports.findOne = (req, res) => result.data(req.user, res);

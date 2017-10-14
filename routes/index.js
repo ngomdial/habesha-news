@@ -16,5 +16,6 @@ router.use('/users', require('./users'));
 router.use('/profiles', require('./profiles'));
 router.use('/articles', require('./articles'));
 router.use('/categories', require('./categories'));
+router.use('/article-data', require('./article-data'));
 
 module.exports = router;

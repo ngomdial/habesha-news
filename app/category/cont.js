@@ -48,4 +48,4 @@ exports.validateOne = (req, res, next, categoryId) => {
         });
 };
 
-exports.getOne = (req, res) => result.data(req.category, res);
+exports.findOne = (req, res) => result.data(req.category, res);

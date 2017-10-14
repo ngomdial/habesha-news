@@ -9,6 +9,6 @@ router.post('/login', controller.login);
 router.get('/', controller.findAll);
 
 router.param('user_id', controller.validateOne);
-router.get('/:user_id', controller.getOne);
+router.get('/:user_id', controller.findOne);
 
 module.exports = router;

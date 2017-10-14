@@ -7,6 +7,6 @@ router.get('/', controller.findAll);
 router.post('/', controller.create);
 
 router.param('category_id', controller.validateOne);
-router.get('/:category_id', controller.getOne);
+router.get('/:category_id', controller.findOne);
 
 module.exports = router;

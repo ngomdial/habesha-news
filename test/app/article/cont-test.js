@@ -27,10 +27,17 @@ describe('article cont.js', () => {
             .then(() => User.remove({}).exec());
     });
 
+    const username = 'saladthieves', email = 'salad@mail.com', password = 'something_else';
+
     describe('Post article test', () => {
         let post_article_url = base_url + '/articles';
 
         let postArticle = data => request(app).post(post_article_url).send(data);
+
+        let createCategory = name => request(app).post(base_url + '/categories').send({name});
+
+        let signUpUser = (username, email, password) =>
+            request(app).post(base_url + '/users/signup').send({username, email, password});
 
         const headline = 'New flying cars',
             source_url = 'http://somesource.com',
@@ -183,19 +190,15 @@ describe('article cont.js', () => {
 
             it('Should create an article if all data is present', done => {
                 // create category first
-                request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
+                createCategory('politics').end((err, res) => {
                     let category = res.body._id;
-                    const signup_url = base_url + '/users/signup';
-                    const username = 'saladthieves',
-                        email = 'salad@mail.com',
-                        password = 'something_else';
 
                     expect(res.status).to.equal(201);
                     expect(res.body).to.be.a('object');
                     expect(res.body).to.have.property('name').equal('politics');
 
                     // then create user
-                    request(app).post(signup_url).send({username, email, password}).end((err, res) => {
+                    signUpUser(username, email, password).end((err, res) => {
                         let poster = res.body._id;
                         let data = {headline, source_url, image_url, summary, category, poster};
 

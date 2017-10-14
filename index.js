@@ -10,12 +10,14 @@ const env           = process.env.NODE_ENV;
 const base_url      = process.env.BASE_URL + '/' + process.env.VERSION;
 // TODO: Add jwt authentication
 const bearerToken   = require('express-bearer-token');
+const validator     = require('express-validator');
+
 const Log = require('./util/log');
 new Log(app);
 const log = Log;
 
-
 app.use(bodyParser.json());
+app.use(validator());
 app.use(bearerToken());
 // TODO: Setup middleware
 

@@ -7,11 +7,11 @@ const Promise = require('bluebird');
 const result = require('../../util/res');
 const log = require('../../util/log');
 const helper = require('../../util/signup-helper');
+const validator = require('./validator');
 
 exports.login = (req, res) => {
-    let body = req.body,
-        data, user;
-    helper.hasLoginCredentials(body)
+    let data, user;
+    validator.hasLoginCredentials(req)
         .then(loginData => {
             data = loginData;
             return userDal.findOne({username: data.username});

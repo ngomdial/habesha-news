@@ -18,5 +18,6 @@ router.use('/articles', require('./articles'));
 router.use('/categories', require('./categories'));
 router.use('/article-data', require('./article-data'));
 router.use('/comments', require('./comments'));
+router.use('/warnings', require('./warnings'));
 
 module.exports = router;

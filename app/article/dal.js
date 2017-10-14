@@ -6,6 +6,6 @@ exports.create = data => new Article(data).save();
 
 exports.update = article => article.save();
 
-exports.findOne = query => Article.findOne(query).populate('poster category data').exec();
+exports.findOne = query => Article.findOne(query).populate('data').exec();
 
 exports.findAll = () => Article.find().exec();

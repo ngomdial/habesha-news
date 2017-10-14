@@ -1,0 +1,11 @@
+'use strict';
+
+const router = require('express').Router();
+const controller = require('../app/category/cont');
+
+router.get('/', controller.findAll);
+
+router.param('category_id', controller.validateOne);
+router.get('/:category_id', controller.getOne);
+
+module.exports = router;

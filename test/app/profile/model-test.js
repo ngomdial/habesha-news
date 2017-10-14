@@ -26,5 +26,3 @@ describe('profile model.js', () => {
         sandbox.restore();
     });
 });
-
-// TODO: Write tests for adding categories

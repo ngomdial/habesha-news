@@ -15,7 +15,6 @@ exports.create = (req, res) => {
 
     validator.hasRequiredFields(req)
         .then(data => {
-            console.log('');
             category = data.category;
             user = data.user;
             return categoryDal.findOne({_id: category});

@@ -1,7 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const result = require('../../util/res');
 const helper = require('../../util/helper');
 
 exports.hasLoginCredentials = req => {
@@ -18,23 +17,12 @@ exports.hasLoginCredentials = req => {
 };
 
 exports.hasSignUpCredentials = req => {
-    let errors;
     return new Promise((resolve, reject) => {
-        req.checkBody('email', 'No email provided').trim().notEmpty();
-        errors = req.validationErrors();
-        if (errors) reject(result.reject(errors[0].msg));
+        helper.validateEmpty('email', 'No email provided', reject, req);
+        helper.validateEmpty('username', 'No username provided', reject, req);
+        helper.validateEmpty('password', 'No password provided', reject, req);
 
-        req.checkBody('username', 'No username provided').trim().notEmpty();
-        errors = req.validationErrors();
-        if (errors) reject(result.reject(errors[0].msg));
-
-        req.checkBody('password', 'No password provided').trim().notEmpty();
-        errors = req.validationErrors();
-        if (errors) reject(result.reject(errors[0].msg));
-
-        req.sanitize('email').trim();
-        req.sanitize('username').trim();
-        req.sanitize('password').trim();
+        helper.sanitizeTrim(req, ['email', 'username', 'password']);
 
         let {email, username, password} = req.body;
 

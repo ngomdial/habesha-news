@@ -3,57 +3,57 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Promise = require('bluebird');
 
 const User = require('../../../app/user/model');
 
 describe('user model.js', () => {
     let sandbox;
 
+    const username = 'saladthieves',
+        email = 'salad@mail.com',
+        password = 'someone';
+
     beforeEach(() => {
         sandbox = sinon.createSandbox();
     });
 
-    it('Should fail upon saving, if username is missing', () => {
-        let user = new User();
+    it('Should fail upon saving, if model is empty', done => {
+        let user = new User({});
 
-        return Promise.resolve(() => {
-            user.validate(err => {
-                expect(err.errors.username).to.exist;
-            });
+        user.validate(err => {
+            expect(err).to.have.property('errors');
+            expect(err.errors.username).to.exist;
+            expect(err.errors.email).to.exist;
+            expect(err.errors.password).to.exist;
+            done();
         });
     });
 
-    it('Should fail upon saving, if email is missing', () => {
-        let user = new User();
+    it('Should fail upon saving, if email is missing', done => {
+        let user = new User({username, password});
 
-        return Promise.resolve(() => {
-            user.validate(err => {
-                expect(err.errors.email).to.exist;
-            });
+        user.validate(err => {
+            expect(err.errors.email).to.exist;
+            done();
         });
     });
 
-    it('Should fail upon saving, if password is missing', () => {
-        let user = new User();
+    it('Should fail upon saving, if username is missing', done => {
+        let user = new User({email, password});
 
-        return Promise.resolve(() => {
-            user.validate(err => {
-                expect(err.errors.password).to.exist;
-            });
+        user.validate(err => {
+            expect(err.errors.username).to.exist;
+            done();
         });
     });
 
-    it('Should fail upon saving, if username, email and password are missing', () => {
-        let user = new User();
+    it('Should fail upon saving, if password is missing', done => {
+        let user = new User({email, username});
 
-        return Promise.resolve(() => {
-            user.validate(err => {
-                expect(err.errors.username).to.exist;
-                expect(err.errors.email).to.exist;
-                expect(err.errors.password).to.exist;
-            });
-        })
+        user.validate(err => {
+            expect(err.errors.password).to.exist;
+            done();
+        });
     });
 
     afterEach(() => {

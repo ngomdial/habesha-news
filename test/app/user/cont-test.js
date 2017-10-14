@@ -27,17 +27,52 @@ describe('user cont.js', () => {
     describe('login test', () => {
         let login_url = base_url + '/users/login';
 
+        let signUpUser = request(app).post(base_url + '/users/signup').send({username, email, password});
+
+        let loginUser = request(app).post(login_url).send({username, password});
+
         beforeEach(() => {
             return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
-        const signUpUser = request(app).post(base_url + '/users/signup').send({email, username, password});
-        const loginUser = request(app).post(base_url + '/users/login').send({username, password});
-
-        it('Should login if a user has all the details', () => {
+        it('Should fail login if username does not exist', () => {
             return signUpUser
-                .expect(200)
-                .then(() => {
+                .then(res => {
+                    expect(res.status).to.equal(201);
+                    return request(app).post(login_url).send({username: 'someone', password});
+                })
+                .then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').to.equal(true);
+                    expect(body).to.have.property('message').to.contain('username or password');
+                    expect(body).to.have.property('status').to.equal(400);
+                });
+        });
+
+        it('Should fail login if password is invalid', () => {
+            return signUpUser
+                .then(res => {
+                    expect(res.status).to.equal(201);
+                    return request(app).post(login_url).send({username, password: 'some_other_pass'});
+                })
+                .then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').to.equal(true);
+                    expect(body).to.have.property('message').to.contain('username or password');
+                    expect(body).to.have.property('status').to.equal(400);
+                });
+        });
+
+        it('Should login if a user has a valid username and password', () => {
+            return signUpUser
+                .then(res => {
+                    expect(res.status).to.equal(201);
                     return loginUser;
                 })
                 .then(res => {
@@ -46,75 +81,10 @@ describe('user cont.js', () => {
                     expect(res.status).to.equal(200);
                     expect(body).to.be.a('object');
                     expect(body).to.have.property('token');
+                    expect(body).to.have.property('user');
                     expect(body.user).to.have.property('username').to.equal(username);
                     expect(body.user).to.have.property('email').to.equal(email);
-                    expect(body.user).to.have.property('profile').to.have.property('user');
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        });
-        it('Should login if a user has all the details', done => {
-            let data = {email, username, password};
-            chai.request(app).post(base_url + '/users/signup').send(data)
-                .end(() => {
-                    chai.request(app)
-                        .post(login_url)
-                        .send({username, password})
-                        .end((err, res) => {
-                            body = res.body;
-
-                            expect(res.status).to.equal(200);
-                            expect(body).to.be.a('object');
-                            expect(body).to.have.property('token');
-                            expect(body.user).to.have.property('username').to.equal(username);
-                            expect(body.user).to.have.property('email').to.equal(email);
-                            expect(body.user).to.have.property('profile').to.have.property('user');
-                            done();
-                        });
-                });
-        });
-
-        it('Should fail login if the user has the wrong username', done => {
-            let data = {email, username, password};
-            chai.request(app).post(base_url + '/users/signup').send(data)
-                .end(() => {
-                    chai.request(app)
-                        .post(login_url)
-                        .send({username: 'cool_username', password})
-                        .end((err, res) => {
-                            body = res.body;
-
-                            expect(res.status).to.equal(400);
-
-                            expect(body).to.be.a('object');
-                            expect(body).to.have.property('error').to.equal(true);
-                            expect(body).to.have.property('message');
-                            expect(body).to.have.property('status').to.be.equal(400);
-                            done();
-                        });
-                });
-
-        });
-
-        it('Should fail login if the user has the wrong password', done => {
-            let data = {email, username, password};
-            chai.request(app).post(base_url + '/users/signup').send(data)
-                .end(() => {
-                    chai.request(app)
-                        .post(login_url)
-                        .send({username, password: 'cool_passwd'})
-                        .end((err, res) => {
-                            body = res.body;
-
-                            expect(res.status).to.equal(400);
-
-                            expect(body).to.be.a('object');
-                            expect(body).to.have.property('error').to.equal(true);
-                            expect(body).to.have.property('message');
-                            expect(body).to.have.property('status').to.be.equal(400);
-                            done();
-                        });
+                    expect(body.user).to.have.property('profile');
                 });
         });
 

@@ -38,9 +38,8 @@ exports.login = (req, res) => {
 };
 
 exports.signUp = (req, res) => {
-    let body = req.body;
     let data;
-    helper.hasSignUpCredentials(body)
+    validator.hasSignUpCredentials(req)
         .then(signUpData => {
             data = signUpData;
             return userDal.findOne({email: data.email})

@@ -1,6 +1,7 @@
 'use strict';
 
 const chai = require('chai');
+const request = require('supertest');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
 const expect = chai.expect;
@@ -30,6 +31,29 @@ describe('user cont.js', () => {
             return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
+        const signUpUser = request(app).post(base_url + '/users/signup').send({email, username, password});
+        const loginUser = request(app).post(base_url + '/users/login').send({username, password});
+
+        it('Should login if a user has all the details', () => {
+            return signUpUser
+                .expect(200)
+                .then(() => {
+                    return loginUser;
+                })
+                .then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(200);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('token');
+                    expect(body.user).to.have.property('username').to.equal(username);
+                    expect(body.user).to.have.property('email').to.equal(email);
+                    expect(body.user).to.have.property('profile').to.have.property('user');
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        });
         it('Should login if a user has all the details', done => {
             let data = {email, username, password};
             chai.request(app).post(base_url + '/users/signup').send(data)
@@ -70,6 +94,7 @@ describe('user cont.js', () => {
                             done();
                         });
                 });
+
         });
 
         it('Should fail login if the user has the wrong password', done => {

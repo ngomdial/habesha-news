@@ -41,6 +41,6 @@
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
     "sinon": "^4.0.1",
-    "why-is-node-running": "^1.2.2"
+    "supertest": "^3.0.0"
   }
 }

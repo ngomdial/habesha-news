@@ -26,7 +26,7 @@ describe('res.js', () => {
             sandbox = sinon.createSandbox();
         });
 
-        it('Calls data(payload, res)', () => {
+        it('Should call data(payload, res)', () => {
             sandbox.spy(response, 'data');
             sandbox.spy(res, 'status');
             sandbox.spy(res, 'json');
@@ -40,7 +40,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls dataStatus(payload, status, res)', () => {
+        it('Should call dataStatus(payload, status, res)', () => {
             const status = 201;
 
             sandbox.spy(response, 'dataStatus');
@@ -69,7 +69,7 @@ describe('res.js', () => {
             sandbox.spy(response, 'send');
         });
 
-        it('Calls message(message, res)', () => {
+        it('Should call message(message, res)', () => {
             sandbox.spy(response, 'message');
 
             response.message(message, res);
@@ -80,7 +80,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls messageStatus(message, status, res)', () => {
+        it('Should call messageStatus(message, status, res)', () => {
             const status = 500;
 
             sandbox.spy(response, 'messageStatus');
@@ -106,7 +106,7 @@ describe('res.js', () => {
             sandbox.spy(response, 'send');
         });
 
-        it('Calls error(message, res)', () => {
+        it('Should call error(message, res)', () => {
             sandbox.spy(response, 'error');
 
             response.error(message, res);
@@ -117,7 +117,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls errorStatus(message, status, res)', () => {
+        it('Should call errorStatus(message, status, res)', () => {
             let status = 403;
 
             sandbox.spy(response, 'errorStatus');
@@ -129,7 +129,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls errorReject(reject, res)', () => {
+        it('Should call errorReject(reject, res)', () => {
             let reject = response.reject(message);
 
             sandbox.spy(response, 'errorReject');
@@ -155,7 +155,7 @@ describe('res.js', () => {
             sandbox.spy(response, 'send');
         });
 
-        it('Calls reject(message)', () => {
+        it('Should call reject(message)', () => {
             let reject = response.reject(message);
 
             return Promise.resolve(() => {
@@ -165,7 +165,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls rejectStatus(message, status)', () => {
+        it('Should call rejectStatus(message, status)', () => {
             const status = 403;
             let reject = response.rejectStatus(message, status);
 
@@ -176,7 +176,7 @@ describe('res.js', () => {
             });
         });
 
-        it('Calls send(error, message, status, res)', () => {
+        it('Should call send(error, message, status, res)', () => {
             let error = true,
                 message = 'Something went wrong',
                 status = 500;
@@ -189,11 +189,6 @@ describe('res.js', () => {
             return Promise.resolve(() => {
                 sinon.assert.calledWithExactly(response.send, error, message, status, res);
             });
-        });
-
-        it('finishes everything up', done => {
-            sinon.assert.match(true, true);
-            done();
         });
 
         afterEach(() => {

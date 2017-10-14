@@ -172,6 +172,7 @@ describe('article cont.js', () => {
                 chai.request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
                     let category = res.body._id;
 
+
                     let data = {headline, source_url, image_url, summary, category, poster};
                     chai.request(app).post(post_article_url).send(data).end((err, res) => {
                         body = res.body;
@@ -236,13 +237,6 @@ describe('article cont.js', () => {
                     .then(() => Category.remove({}).exec())
                     .then(() => User.remove({}).exec());
             });
-        });
-
-        afterEach(() => {
-            return Article.remove({}).exec()
-                .then(() => ArticleData.remove({}).exec())
-                .then(() => Category.remove({}).exec())
-                .then(() => User.remove({}).exec());
         });
     });
 

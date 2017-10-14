@@ -46,13 +46,15 @@ exports.signUp = (req, res) => {
         })
         .then(user => {
             if (!user) {
+                console.log('Found no matching email');
                 return userDal.findOne({username: data.username});
             } else {
-                return Promise.reject(result.reject('This email address is already registered'));
+                return Promise.reject(result.reject('This email address already exists'));
             }
         })
         .then(user => {
             if (!user) {
+                console.log('Found no matching username');
                 return helper.genSalt();
             } else {
                 return Promise.reject(result.reject('This username already exists'));

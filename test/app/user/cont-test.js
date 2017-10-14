@@ -16,7 +16,13 @@ describe('user cont.js', () => {
     const username = 'saladthieves',
         email = 'salad@mail.com',
         password = 'something',
-        base_url = process.env.BASE_URL + '/' + process.env.VERSION;
+        baseUrl = process.env.BASE_URL + '/' + process.env.VERSION,
+        signUpUrl = baseUrl + '/users/signup',
+        loginUrl = baseUrl + '/users/login';
+
+    let loginUser = (username, password) => request(app).post(loginUrl).send({username, password});
+
+    let signUpUser = (username, email, password) => request(app).post(signUpUrl).send({username, email, password});
 
     let body;
 
@@ -25,67 +31,62 @@ describe('user cont.js', () => {
     });
 
     describe('login test', () => {
-        let login_url = base_url + '/users/login';
-
-        let signUpUser = request(app).post(base_url + '/users/signup').send({username, email, password});
-
-        let loginUser = request(app).post(login_url).send({username, password});
 
         beforeEach(() => {
             return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
-        it('Should fail login if username does not exist', () => {
-            return signUpUser
-                .then(res => {
-                    expect(res.status).to.equal(201);
-                    return request(app).post(login_url).send({username: 'someone', password});
-                })
-                .then(res => {
-                    body = res.body;
+        it('Should fail login if username does not exist', done => {
+            signUpUser(username, email, password).end((err, res) => {
+                expect(res.status).to.equal(201);
+                loginUser('someone', password)
+                    .end((err, res) => {
+                        body = res.body;
 
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').to.equal(true);
-                    expect(body).to.have.property('message').to.contain('username or password');
-                    expect(body).to.have.property('status').to.equal(400);
-                });
+                        expect(res.status).to.equal(400);
+                        expect(body).to.be.a('object');
+                        expect(body).to.have.property('error').to.equal(true);
+                        expect(body).to.have.property('message').to.contain('username or password');
+                        expect(body).to.have.property('status').to.equal(400);
+                        done();
+                    });
+            });
         });
 
-        it('Should fail login if password is invalid', () => {
-            return signUpUser
-                .then(res => {
-                    expect(res.status).to.equal(201);
-                    return request(app).post(login_url).send({username, password: 'some_other_pass'});
-                })
-                .then(res => {
-                    body = res.body;
+        it('Should fail login if password is invalid', done => {
+            signUpUser(username, email, password).end((err, res) => {
+                expect(res.status).to.equal(201);
+                loginUser(username, 'some_password')
+                    .end((err, res) => {
+                        body = res.body;
 
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').to.equal(true);
-                    expect(body).to.have.property('message').to.contain('username or password');
-                    expect(body).to.have.property('status').to.equal(400);
-                });
+                        expect(res.status).to.equal(400);
+                        expect(body).to.be.a('object');
+                        expect(body).to.have.property('error').to.equal(true);
+                        expect(body).to.have.property('message').to.contain('username or password');
+                        expect(body).to.have.property('status').to.equal(400);
+                        done();
+                    });
+            });
         });
 
-        it('Should login if a user has a valid username and password', () => {
-            return signUpUser
-                .then(res => {
-                    expect(res.status).to.equal(201);
-                    return loginUser;
-                })
-                .then(res => {
-                    body = res.body;
+        it('Should login if a user has a valid username and password', done => {
+            signUpUser(username, email, password).end((err, res) => {
+                expect(res.status).to.equal(201);
+                loginUser(username, password)
+                    .end((err, res) => {
+                        body = res.body;
 
-                    expect(res.status).to.equal(200);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('token');
-                    expect(body).to.have.property('user');
-                    expect(body.user).to.have.property('username').to.equal(username);
-                    expect(body.user).to.have.property('email').to.equal(email);
-                    expect(body.user).to.have.property('profile');
-                });
+                        expect(res.status).to.equal(200);
+                        expect(body).to.be.a('object');
+                        expect(body).to.have.property('token');
+                        expect(body).to.have.property('user');
+                        expect(body.user).to.have.property('username').to.equal(username);
+                        expect(body.user).to.have.property('email').to.equal(email);
+                        expect(body.user).to.have.property('profile');
+                        done();
+                    });
+            });
         });
 
         afterEach(() => {
@@ -94,71 +95,58 @@ describe('user cont.js', () => {
     });
 
 
-    describe('registration test', () => {    // TODO: Change to promises
-        let signup_url = base_url + '/users/signup';
-
+    describe('signup test', () => {
         beforeEach(() => {
             return User.remove({}).exec().then(() => Profile.remove({}).exec());
         });
 
-        it('Should register if a user has all the details', done => {
-            let data = {email, username, password};
-
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end((err, res) => {
-                    body = res.body;
-
-                    expect(res.status).to.equal(201);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('username').equal(username);
-                    expect(body).to.have.property('email').equal(email);
-                    expect(body).to.have.property('profile').to.have.property('user');
-                    done();
-                });
-        });
-
         it('Should fail if username is already registered', done => {
-            let data = {email: 'person@domain.com', username, password};
-
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end(() => {
-                    chai.request(app)
-                        .post(signup_url)
-                        .send({email, username, password})
+            signUpUser(username, email, password)
+                .end((err, res) => {
+                    expect(res.status).to.equal(201);
+                    signUpUser(username, 'muhire@mail.com', password)
                         .end((err, res) => {
                             body = res.body;
 
                             expect(res.status).to.equal(400);
-                            expect(body).to.have.property('error').equal(true);
-                            expect(body).to.have.property('message');
+                            expect(body).to.be.a('object');
+                            expect(body).to.have.property('error').to.equal(true);
+                            expect(body).to.have.property('message').to.contain('already');
+                            expect(body).to.have.property('status').to.equal(400);
                             done();
                         });
                 });
         });
 
         it('Should fail if email is already registered', done => {
-            let data = {email, username: 'newer_username', password};
-
-            chai.request(app)
-                .post(signup_url)
-                .send(data)
-                .end(() => {
-                    chai.request(app)
-                        .post(signup_url)
-                        .send({email, username, password})
+            signUpUser(username, email, password)
+                .end((err, res) => {
+                    expect(res.status).to.equal(201);
+                    signUpUser('cool_guy_8739', email, password)
                         .end((err, res) => {
                             body = res.body;
 
                             expect(res.status).to.equal(400);
-                            expect(body).to.have.property('error').equal(true);
-                            expect(body).to.have.property('message');
+                            expect(body).to.be.a('object');
+                            expect(body).to.have.property('error').to.equal(true);
+                            expect(body).to.have.property('message').to.contain('already');
+                            expect(body).to.have.property('status').to.equal(400);
                             done();
                         });
                 });
+        });
+
+        it('Should signup if user has username, email, password', done => {
+            signUpUser(username, email, password).end((err, res) => {
+                body = res.body;
+
+                expect(res.status).to.equal(201);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('username');
+                expect(body).to.have.property('email');
+                expect(body).to.have.property('profile');
+                done();
+            });
         });
 
         afterEach(() => {

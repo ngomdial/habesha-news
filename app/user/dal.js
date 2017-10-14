@@ -1,8 +1,6 @@
 'use strict';
 
 const User = require('./model');
-const result = require('../../util/res');
-const Promise = require('bluebird');
 
 exports.create = (username, email, password) => new User({username, email, password}).save();
 

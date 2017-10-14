@@ -3,10 +3,6 @@
 const result = require('../../util/res');
 const articleDal = require('./dal');
 
-exports.create = (req, res) => {
-
-};
-
 exports.findAll = (req, res) => {
     articleDal.findAll()
         .then(data => result.data(data, res))

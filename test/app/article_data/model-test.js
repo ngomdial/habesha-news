@@ -5,7 +5,7 @@ const expect = chai.expect;
 const sinon = require('sinon');
 const Promise = require('bluebird');
 
-const ArticleData = require('../../../app/article_data/model');
+const ArticleData = require('../../../app/article-data/model');
 
 describe('article data model.js', () => {
     let sandbox;

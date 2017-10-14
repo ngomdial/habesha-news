@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 
 const articleDal = require('./dal');
+const articleDataDal = require('../article-data/dal');
 const categoryDal = require('../category/dal');
 const userDal = require('../user/dal');
 
@@ -11,7 +12,7 @@ const log = require('../../util/log');
 const validator = require('./validator');
 
 exports.create = (req, res) => {
-    let headline, source_url, image_url, summary, category, poster;
+    let headline, source_url, image_url, summary, category, poster, article;
 
     validator.hasRequiredFields(req)
         .then(data => {
@@ -37,8 +38,16 @@ exports.create = (req, res) => {
                 return articleDal.create({headline, source_url, image_url, summary, category, poster});
             }
         })
-        .then(article => {
-            result.dataStatus(article, 201, res);
+        .then(created => {
+            article = created;
+            return articleDataDal.create(article._id);
+        })
+        .then(articleData => {
+            article.data = articleData;
+            return articleDal.update(article);
+        })
+        .then(updatedArticle => {
+            result.dataStatus(updatedArticle, 201, res);
         })
         .catch(reject => {
             result.errorReject(reject, res);

@@ -1,7 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const controller = require('../app/article_data/cont');
+const controller = require('../app/article-data/cont');
 
 router.get('/', controller.findAll);
 

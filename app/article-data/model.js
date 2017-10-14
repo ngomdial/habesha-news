@@ -8,7 +8,7 @@ const articleDataSchema = new Schema({
         comments:   [{type: Schema.Types.ObjectId, ref: 'Comment'}],
         followers:  [{type: Schema.Types.ObjectId, ref: 'User'}],
         warnings:   [{type: Schema.Types.ObjectId, ref: 'Warning'}],
-        voters:     [{type: Schema.Types.ObjectId, ref: 'User'}],
+        voters:     [{type: Schema.Types.ObjectId, ref: 'User'}]
     },
     {
         timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}

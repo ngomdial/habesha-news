@@ -3,7 +3,6 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Promise = require('bluebird');
 
 const ArticleData = require('../../../app/article-data/model');
 

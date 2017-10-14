@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
-        name:   {type: String, required: true, unique: true, index: true},
+        name:   {type: String, required: true, unique: true},
         color:  {type: String, default: '#000000'}
     },
     {

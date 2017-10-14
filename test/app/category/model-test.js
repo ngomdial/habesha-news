@@ -3,24 +3,22 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Promise = require('bluebird');
 
 const Category = require('../../../app/category/model');
 
-describe('category model.js', () => {       // TODO: Test for uniqueness of name
+describe('category model.js', () => {
     let sandbox;
 
     beforeEach(() => {
         sandbox = sinon.createSandbox();
     });
 
-    it('Should fail upon saving, if name is missing', () => {
+    it('Should fail upon saving, if name is missing', done => {
         let category = new Category();
 
-        return Promise.resolve(() => {
-            category.validate(err => {
-                expect(err.errors.name).to.exist;
-            });
+        category.validate(err => {
+            expect(err.errors.name).to.exist;
+            done();
         });
     });
 

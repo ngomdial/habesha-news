@@ -3,7 +3,6 @@
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Promise = require('bluebird');
 
 const Profile = require('../../../app/profile/model');
 
@@ -14,13 +13,12 @@ describe('profile model.js', () => {
         sandbox = sinon.createSandbox();
     });
 
-    it('Should fail upon saving, if user is missing', () => {
+    it('Should fail upon saving, if user is missing', done => {
         let profile = new Profile();
 
-        return Promise.resolve(() => {
-            profile.validate(err => {
-                expect(err.errors.user).to.exist;
-            });
+        profile.validate(err => {
+            expect(err.errors.user).to.exist;
+            done();
         });
     });
 

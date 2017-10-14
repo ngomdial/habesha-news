@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "API for the Habesha News app",
   "main": "index.js",
+  "repository": "https://saladthieves@bitbucket.org/habeshateam/habesha-news-api.git",
   "scripts": {
     "test": "export NODE_ENV=test && nyc --reporter=html --reporter=text mocha test",
     "start": "nodemon index.js"

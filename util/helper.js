@@ -7,33 +7,16 @@ const result = require('./res');
 
 const WORK_FACTOR = process.env.SALT_WORK_FACTOR;
 
-exports.hasLoginCredentials = body => {
-    let {username, password} = body;
-    return new Promise((resolve, reject) => {
-        if (!username || !username.trim()) {
-            reject(result.reject('No username provided'));
-        }
-        if (!password || !password.trim()) {
-            reject(result.reject('No password provided'));
-        }
-        resolve({username, password});
-    });
+exports.validateEmpty = (attr, message, reject, req) => {
+    req.checkBody(attr, message).trim().notEmpty();
+    let errors = req.validationErrors();
+    if (errors) reject(result.reject(errors[0].msg));
 };
 
-exports.hasSignUpCredentials = body => {
-    let {email, username, password} = body;
-    return new Promise((resolve, reject) => {
-        if (!email || !email.trim()) {
-            reject(result.reject('No email provided'));
-        }
-        if (!username || !username.trim()) {
-            reject(result.reject('No username provided'));
-        }
-        if (!password || !password.trim()) {
-            reject(result.reject('No password provided'));
-        }
-        resolve({email, username, password});
-    });
+exports.sanitizeTrim = (req, values) => {
+    for (let i = 0; i < values.length; i++) {
+        req.sanitize(values[i]).trim();
+    }
 };
 
 exports.comparePassword = (password, hash) => {

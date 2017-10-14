@@ -2,20 +2,14 @@
 
 const Promise = require('bluebird');
 const result = require('../../util/res');
+const helper = require('../../util/helper');
 
 exports.hasLoginCredentials = req => {
-    let errors;
     return new Promise((resolve, reject) => {
-        req.checkBody('username', 'No username provided').trim().notEmpty();
-        errors = req.validationErrors();
-        if (errors) reject(result.reject(errors[0].msg));
+        helper.validateEmpty('username', 'No username provided', reject, req);
+        helper.validateEmpty('password', 'No password provided', reject, req);
 
-        req.checkBody('password', 'No password provided').trim().notEmpty();
-        errors = req.validationErrors();
-        if (errors) reject(result.reject(errors[0].msg));
-
-        req.sanitize('username').trim();
-        req.sanitize('password').trim();
+        helper.sanitizeTrim(req, ['username', 'password']);
 
         let {username, password} = req.body;
 

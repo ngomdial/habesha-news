@@ -6,7 +6,7 @@ const profileDal = require('../profile/dal');
 const Promise = require('bluebird');
 const result = require('../../util/res');
 const log = require('../../util/log');
-const helper = require('../../util/signup-helper');
+const helper = require('../../util/helper');
 const validator = require('./validator');
 
 exports.login = (req, res) => {

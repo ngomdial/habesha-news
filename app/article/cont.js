@@ -8,34 +8,18 @@ const userDal = require('../user/dal');
 
 const result = require('../../util/res');
 const log = require('../../util/log');
+const validator = require('./validator');
 
 exports.create = (req, res) => {
-    let {
-        headline, source_url, image_url,
-        summary, category, user
-    } = req.body;
+    let category, user;
 
-    if (!headline || !headline.trim()) {
-        result.error('No headline provided', res);
-    }
-    if (!source_url || !source_url.trim()) {
-        result.error('No source_url provided', res);
-    }
-    if (!image_url || !image_url.trim()) {
-        result.error('No image_url provided', res);
-    }
-    if (!summary || !summary.trim()) {
-        result.error('No summary provided', res);
-    }
-    if (!category || !category.trim()) {
-        result.error('No category provided', res);
-    }
-    if (!user || !user.trim()) {
-        result.error('No user provided', res);
-    }
-
-    console.log('reached!');
-    categoryDal.findOne({_id: category})
+    validator.hasRequiredFields(req)
+        .then(data => {
+            console.log('');
+            category = data.category;
+            user = data.user;
+            return categoryDal.findOne({_id: category});
+        })
         .then(found => {
             if (!found) {
                 return Promise.reject(result.reject(`Category with _id ${category} does not exist`));

@@ -1,6 +1,10 @@
 'use strict';
 
+const Promise = require('bluebird');
+
 const articleDal = require('./dal');
+const categoryDal = require('../category/dal');
+const userDal = require('../user/dal');
 
 const result = require('../../util/res');
 const log = require('../../util/log');
@@ -30,9 +34,26 @@ exports.create = (req, res) => {
         result.error('No user provided', res);
     }
 
+    console.log('reached!');
+    categoryDal.findOne({_id: category})
+        .then(found => {
+            if (!found) {
+                return Promise.reject(result.reject(`Category with _id ${category} does not exist`));
+            } else {
+                return userDal.findOne({_id: user});
+            }
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(result.reject(`User with _id ${user} does not exist`));
+            } else {
+                result.messageStatus('Article created!', 201, res);
+            }
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
 
-
-    result.messageStatus('Article created', 201, res);
 };
 
 exports.findAll = (req, res) => {

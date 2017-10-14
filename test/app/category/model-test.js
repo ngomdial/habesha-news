@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 const Category = require('../../../app/category/model');
 
-describe('category model.js', () => {
+describe('category model.js', () => {       // TODO: Test for uniqueness of name
     let sandbox;
 
     beforeEach(() => {

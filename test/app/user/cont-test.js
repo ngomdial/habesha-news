@@ -2,11 +2,8 @@
 
 const chai = require('chai');
 const request = require('supertest');
-const chaiHttp = require('chai-http');
 const sinon = require('sinon');
 const expect = chai.expect;
-
-chai.use(chaiHttp);
 
 const app = require('../../../index');
 const User = require('../../../app/user/model');

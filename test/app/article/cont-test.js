@@ -2,6 +2,7 @@
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const request = require('supertest');
 const sinon = require('sinon');
 const expect = chai.expect;
 
@@ -29,6 +30,8 @@ describe('article cont.js', () => {
     describe('Post article test', () => {
         let post_article_url = base_url + '/articles';
 
+        let postArticle = data => request(app).post(post_article_url).send(data);
+
         const headline = 'New flying cars',
             source_url = 'http://somesource.com',
             image_url = 'http://somesource.com/images/headline.jpg',
@@ -37,109 +40,103 @@ describe('article cont.js', () => {
             poster = '59e1fb19032cc7284ab7c55c';
 
         describe('Validate input test', () => {
+
             it('Should fail validation if req.body is empty', done => {
                 let data = {};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if headline is missing', done => {
                 let data = {source_url, image_url, summary, category, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('headline provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('headline provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if source_url is missing', done => {
                 let data = {headline, image_url, summary, category, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('source_url provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('source_url provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if image_url is missing', done => {
                 let data = {headline, source_url, summary, category, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('image_url provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('image_url provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if summary is missing', done => {
                 let data = {headline, source_url, image_url, category, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('summary provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('summary provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if category is missing', done => {
                 let data = {headline, source_url, image_url, summary, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('category provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('category provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
 
             it('Should fail validation if poster is missing', done => {
                 let data = {headline, source_url, image_url, summary, category};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(400);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains('poster provided');
-                        expect(body).to.have.property('status').equal(400);
-                        done();
-                    });
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('poster provided');
+                    expect(body).to.have.property('status').equal(400);
+                    done();
+                });
             });
         });
 
@@ -155,26 +152,23 @@ describe('article cont.js', () => {
 
             it('Should fail posting if category does not exist', done => {
                 let data = {headline, source_url, image_url, summary, category, poster};
-                chai.request(app).post(post_article_url).send(data)
-                    .end((err, res) => {
-                        body = res.body;
+                postArticle(data).end((err, res) => {
+                    body = res.body;
 
-                        expect(res.status).to.equal(404);
-                        expect(body).to.be.a('object');
-                        expect(body).to.have.property('error').equal(true);
-                        expect(body).to.have.property('message').contains(`Category with _id ${category}`);
-                        expect(body).to.have.property('status').equal(404);
-                        done();
-                    });
+                    expect(res.status).to.equal(404);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains(`Category with _id ${category}`);
+                    expect(body).to.have.property('status').equal(404);
+                    done();
+                });
             });
 
             it('Should fail posting if the poster does not exist', done => {
-                chai.request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
+                request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
                     let category = res.body._id;
-
-
                     let data = {headline, source_url, image_url, summary, category, poster};
-                    chai.request(app).post(post_article_url).send(data).end((err, res) => {
+                    postArticle(data).end((err, res) => {
                         body = res.body;
 
                         expect(res.status).to.equal(404);
@@ -189,7 +183,7 @@ describe('article cont.js', () => {
 
             it('Should create an article if all data is present', done => {
                 // create category first
-                chai.request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
+                request(app).post(create_category_url).send({name: 'politics'}).end((err, res) => {
                     let category = res.body._id;
                     const signup_url = base_url + '/users/signup';
                     const username = 'saladthieves',
@@ -201,7 +195,7 @@ describe('article cont.js', () => {
                     expect(res.body).to.have.property('name').equal('politics');
 
                     // then create user
-                    chai.request(app).post(signup_url).send({username, email, password}).end((err, res) => {
+                    request(app).post(signup_url).send({username, email, password}).end((err, res) => {
                         let poster = res.body._id;
                         let data = {headline, source_url, image_url, summary, category, poster};
 
@@ -211,7 +205,7 @@ describe('article cont.js', () => {
                         expect(res.body).to.have.property('email').equal(email);
 
                         // then create article
-                        chai.request(app).post(post_article_url).send(data).end((err, res) => {
+                        postArticle(data).end((err, res) => {
                             body = res.body;
 
                             expect(res.status).to.equal(201);

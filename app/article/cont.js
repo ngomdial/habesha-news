@@ -26,14 +26,14 @@ exports.create = (req, res) => {
         })
         .then(found => {
             if (!found) {
-                return Promise.reject(result.reject(`Category with _id ${category} does not exist`));
+                return Promise.reject(result.rejectStatus(`Category with _id ${category} does not exist`, 404));
             } else {
                 return userDal.findOne({_id: poster});
             }
         })
         .then(found => {
             if (!found) {
-                return Promise.reject(result.reject(`User with _id ${poster} does not exist`));
+                return Promise.reject(result.rejectStatus(`User with _id ${poster} does not exist`, 404));
             } else {
                 return articleDal.create({headline, source_url, image_url, summary, category, poster});
             }

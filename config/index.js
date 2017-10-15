@@ -2,7 +2,11 @@
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-const url = process.env.DATABASE_URL;
+
+let url = process.env.DATABASE_URL;
+if (process.env.NODE_ENV === 'test') {
+    url += '_test';
+}
 
 mongoose.plugin(require('mongoose-hidden')({
     defaultHidden: {'_id': false, password: true, pin: true, '__v': true}

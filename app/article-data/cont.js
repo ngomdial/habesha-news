@@ -53,8 +53,28 @@ exports.unfollow = (req, res) => {
     let follower;
     validator.hasFollowFields(req)
         .then(user => {
-
-        });
+            follower = user;
+            return userDal.findOne({_id: follower})
+        })
+        .then(found => {
+            if (!found) {
+                result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
+            } else {
+                if (helper.contains(found, data.followers)) {
+                    data.followers.pull(follower);
+                    return data.save();
+                } else {
+                    result.errorStatus(
+                        `User with _id ${follower} is not following Article with _id ${data.article}`,
+                        400, res
+                    );
+                }
+            }
+        })
+        .then(updated => {
+            result.data(updated, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
 };
 
 exports.follow = (req, res) => {

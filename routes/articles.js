@@ -10,5 +10,6 @@ router.param('article_id', controller.validateOne);
 router.get('/:article_id', controller.findOne);
 router.get('/:article_id/comments', controller.getComments);
 router.post('/:article_id/comments', controller.postComment);
+router.get('/:article_id/followers', controller.getFollowers);
 
 module.exports = router;

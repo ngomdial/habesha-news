@@ -98,3 +98,15 @@ exports.postComment = (req, res) => {
     req.body.data = article.data._id;
     commentController.create(req, res);
 };
+
+exports.getFollowers = (req, res) => {
+    let article = req.article;
+    let data = article.data._id;
+    articleDataDal.findOne({_id: data})
+        .then(articleData => {
+            result.data(articleData.followers, res);
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
+};

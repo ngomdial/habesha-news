@@ -7,3 +7,5 @@ exports.create = article_id => new ArticleData({article: article_id}).save();
 exports.findOne = query => ArticleData.findOne(query).populate('comments followers warnings voters').exec();
 
 exports.findAll = () => ArticleData.find().exec();
+
+exports.findAllBy = query => ArticleData.find(query).populate('comments followers warnings voters').exec();

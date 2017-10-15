@@ -2,6 +2,7 @@
 
 const result = require('../../util/res');
 const articleDataDal = require('./dal');
+const Promise = require('bluebird');
 
 exports.findAll = (req, res) => {
     articleDataDal.findAll()
@@ -23,4 +24,3 @@ exports.validateOne = (req, res, next, dataId) => {
 };
 
 exports.findOne = (req, res) => result.data(req.articleData, res);
-

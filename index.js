@@ -19,7 +19,7 @@ const log = Log;
 app.use(bodyParser.json());
 app.use(validator());
 app.use(bearerToken());
-// TODO: Setup middleware
+// TODO: Setup authentication middleware
 
 app.use(base_url, require('./routes'));
 

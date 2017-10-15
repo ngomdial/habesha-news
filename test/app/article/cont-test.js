@@ -1,12 +1,9 @@
 'use strict';
 
 const chai = require('chai');
-const chaiHttp = require('chai-http');
 const request = require('supertest');
 const sinon = require('sinon');
 const expect = chai.expect;
-
-chai.use(chaiHttp);
 
 const app = require('../../../index');
 
@@ -223,7 +220,6 @@ describe('article cont.js', () => {
                             expect(body).to.have.property('data').to.have.property('article').equal(body._id);
                             done();
                         });
-
                     });
                 });
             });

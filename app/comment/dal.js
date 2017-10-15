@@ -5,3 +5,5 @@ const Comment = require('./model');
 exports.findOne = query => Comment.findOne(query).exec();
 
 exports.findAll = () => Comment.find().exec();
+
+exports.findAllBy = query => Comment.find(query).exec();

@@ -6,6 +6,7 @@ const articleDal = require('./dal');
 const articleDataDal = require('../article-data/dal');
 const categoryDal = require('../category/dal');
 const userDal = require('../user/dal');
+const commentDal = require('../comment/dal');
 
 const result = require('../../util/res');
 const log = require('../../util/log');
@@ -79,3 +80,14 @@ exports.validateOne = (req, res, next, articleId) => {
 };
 
 exports.findOne = (req, res) => result.data(req.article, res);
+
+exports.getComments = (req, res) => {
+    commentDal
+        .findAllBy({data: req.article.data._id})
+        .then(comments => {
+            result.data(comments, res);
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
+};

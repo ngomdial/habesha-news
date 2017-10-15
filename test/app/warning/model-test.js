@@ -17,9 +17,9 @@ describe('warning model.js', () => {
         let warning = new Warning();
 
         warning.validate(err => {
+            expect(err.errors.data).to.exist;
             expect(err.errors.message).to.exist;
             expect(err.errors.poster).to.exist;
-            expect(err.errors.article).to.exist;
             done();
         });
     });

@@ -18,6 +18,7 @@ describe('comment model.js', () => {
 
         comment.validate(err => {
             expect(err.errors.message).to.exist;
+            expect(err.errors.data).to.exist;
             expect(err.errors.poster).to.exist;
             done();
         });

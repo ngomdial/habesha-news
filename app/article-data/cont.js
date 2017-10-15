@@ -1,16 +1,16 @@
 'use strict';
 
 const result = require('../../util/res');
-const articleDal = require('./dal');
+const articleDataDal = require('./dal');
 
 exports.findAll = (req, res) => {
-    articleDal.findAll()
+    articleDataDal.findAll()
         .then(data => result.data(data, res))
         .catch(reject => result.errorReject(reject, res));
 };
 
 exports.validateOne = (req, res, next, dataId) => {
-    articleDal
+    articleDataDal
         .findOne({_id: dataId})
         .then(data => {
             if (data) {

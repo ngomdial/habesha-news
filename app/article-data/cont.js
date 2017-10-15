@@ -1,6 +1,8 @@
 'use strict';
 
 const result = require('../../util/res');
+const helper = require('../../util/helper');
+
 const articleDataDal = require('./dal');
 const userDal = require('../user/dal');
 const Promise = require('bluebird');
@@ -46,6 +48,15 @@ exports.getFollowers = dataId => {
         .catch(error => Promise.reject(result.reject(error)));
 };
 
+exports.unfollow = (req, res) => {
+    let data = req.articleData;
+    let follower;
+    validator.hasFollowFields(req)
+        .then(user => {
+
+        });
+};
+
 exports.follow = (req, res) => {
     let data = req.articleData;
     let follower;
@@ -58,18 +69,7 @@ exports.follow = (req, res) => {
             if (!found) {
                 result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
             } else {
-                let followers = data.followers, following = false;
-                if (followers.length !== 0) {
-                    for (let i = 0; i < followers.length; i++) {
-                        let follower = followers[i];
-                        if (follower._id.equals(found._id)) {
-                            following = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (following) {
+                if (helper.contains(found, data.followers)) {
                     result.errorStatus(
                         `User with _id ${follower} is already following Article with _id ${data.article}`,
                         400, res

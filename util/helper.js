@@ -7,12 +7,16 @@ const result = require('./res');
 
 const WORK_FACTOR = process.env.SALT_WORK_FACTOR;
 
-exports.contains = (obj, array) => {
+exports.contains = (doc, array) => {
     const length = array.length;
     if (length === 0) return false;
     for (let i = 0; i < length; i++) {
-        
+        let d = array[i];
+        if (d._id.equals(doc._id)) {
+            return true;
+        }
     }
+    return false;
 };
 
 

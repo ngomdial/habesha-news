@@ -48,35 +48,6 @@ exports.getFollowers = dataId => {
         .catch(error => Promise.reject(result.reject(error)));
 };
 
-exports.unfollow = (req, res) => {
-    let data = req.articleData;
-    let follower;
-    validator.hasFollowFields(req)
-        .then(user => {
-            follower = user;
-            return userDal.findOne({_id: follower})
-        })
-        .then(found => {
-            if (!found) {
-                result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
-            } else {
-                if (helper.contains(found, data.followers)) {
-                    data.followers.pull(follower);
-                    return data.save();
-                } else {
-                    result.errorStatus(
-                        `User with _id ${follower} is not following Article with _id ${data.article}`,
-                        400, res
-                    );
-                }
-            }
-        })
-        .then(updated => {
-            result.data(updated, res);
-        })
-        .catch(reject => result.errorReject(reject, res));
-};
-
 exports.follow = (req, res) => {
     let data = req.articleData;
     let follower;
@@ -101,7 +72,36 @@ exports.follow = (req, res) => {
             }
         })
         .then(updated => {
-            result.data(updated, res);
+            result.dataStatus(updated.followers, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.unfollow = (req, res) => {
+    let data = req.articleData;
+    let follower;
+    validator.hasFollowFields(req)
+        .then(user => {
+            follower = user;
+            return userDal.findOne({_id: follower})
+        })
+        .then(found => {
+            if (!found) {
+                result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
+            } else {
+                if (helper.contains(found, data.followers)) {
+                    data.followers.pull(follower);
+                    return data.save();
+                } else {
+                    result.errorStatus(
+                        `User with _id ${follower} is not following Article with _id ${data.article}`,
+                        400, res
+                    );
+                }
+            }
+        })
+        .then(updated => {
+            result.dataStatus(updated.followers, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };

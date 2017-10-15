@@ -9,6 +9,7 @@ const userDal = require('../user/dal');
 const commentDal = require('../comment/dal');
 
 const commentController = require('../comment/cont');
+const articleDataController = require('../article-data/cont');
 
 const result = require('../../util/res');
 const validator = require('./validator');
@@ -101,12 +102,16 @@ exports.postComment = (req, res) => {
 
 exports.getFollowers = (req, res) => {
     let article = req.article;
-    let data = article.data._id;
-    articleDataDal.findOne({_id: data})
-        .then(articleData => {
-            result.data(articleData.followers, res);
+    let dataId = article.data._id;
+    articleDataController.getFollowers(dataId)
+        .then(data => {
+            result.data(data.followers, res);
         })
         .catch(reject => {
             result.errorReject(reject, res);
         });
+};
+
+exports.follow = (req, res) => {
+
 };

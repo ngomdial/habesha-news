@@ -19,3 +19,10 @@ exports.hasRequiredFields = req => {
         resolve({headline, source_url, image_url, summary, category, poster});
     });
 };
+
+exports.hasFollowFields = req => {
+    return new Promise((resolve, reject) => {
+        helper.validateEmptyOnly('user', 'No user provided', reject, req);
+        resolve(req.body.user);
+    });
+};

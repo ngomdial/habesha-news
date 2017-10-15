@@ -13,7 +13,10 @@ const Category = require('../../../app/category/model');
 const User = require('../../../app/user/model');
 
 describe('article cont.js', () => {
-    const base_url = process.env.BASE_URL + '/' + process.env.VERSION;
+    const baseUrl = process.env.BASE_URL + '/' + process.env.VERSION;
+    const signUpUserUrl = baseUrl + '/users/signup';
+    const articleUrl = baseUrl + '/articles';
+    const categoryUrl = baseUrl + '/categories';
 
     let body;
 
@@ -27,14 +30,13 @@ describe('article cont.js', () => {
     const username = 'saladthieves', email = 'salad@mail.com', password = 'something_else';
 
     describe('Post article test', () => {
-        let post_article_url = base_url + '/articles';
 
-        let postArticle = data => request(app).post(post_article_url).send(data);
+        let postArticle = data => request(app).post(articleUrl).send(data);
 
-        let createCategory = name => request(app).post(base_url + '/categories').send({name});
+        let createCategory = name => request(app).post(categoryUrl).send({name});
 
         let signUpUser = (username, email, password) =>
-            request(app).post(base_url + '/users/signup').send({username, email, password});
+            request(app).post(signUpUserUrl).send({username, email, password});
 
         const headline = 'New flying cars',
             source_url = 'http://somesource.com',
@@ -145,7 +147,7 @@ describe('article cont.js', () => {
         });
 
         describe('Article data saving test', () => {
-            const create_category_url = base_url + '/categories';
+            const create_category_url = baseUrl + '/categories';
 
             beforeEach(() => {
                 return Article.remove({}).exec()
@@ -185,6 +187,7 @@ describe('article cont.js', () => {
                 });
             });
 
+            // TODO: Rewrite this test (see the articles comments test for an example)
             it('Should create an article if all data is present', done => {
                 // create category first
                 createCategory('politics').end((err, res) => {
@@ -225,6 +228,89 @@ describe('article cont.js', () => {
             });
 
             afterEach(() => {
+                return Article.remove({}).exec()
+                    .then(() => ArticleData.remove({}).exec())
+                    .then(() => Category.remove({}).exec())
+                    .then(() => User.remove({}).exec());
+            });
+        });
+
+        describe('Article comments test', () => {
+            let user, article, category;
+            let articleCommentsUrl;
+
+            before(() => {
+                return Article.remove({}).exec()
+                    .then(() => ArticleData.remove({}).exec())
+                    .then(() => Category.remove({}).exec())
+                    .then(() => User.remove({}).exec())
+                    .then(() => {
+                        return request(app).post(signUpUserUrl).send({username, email, password});
+                    })
+                    .then(res => {
+                        user = res.body;
+                        return request(app).post(categoryUrl).send({name: 'politics'});
+                    })
+                    .then(res => {
+                        category = res.body;
+                        let data = {headline, source_url, image_url, summary, category, poster: user};
+                        return request(app).post(articleUrl).send(data);
+                    })
+                    .then(res => {
+                        article = res.body;
+                        articleCommentsUrl = baseUrl + '/articles/' + article._id + '/comments';
+                    });
+            });
+
+            it('Should retrieve empty comments on a new article', done => {
+                request(app).get(articleCommentsUrl).end((err, res) => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(200);
+                    expect(body).to.be.a('array');
+                    expect(body).to.be.empty;
+                    done();
+                });
+            });
+
+            it('Should fail to retrieve comments if article does not exist', done => {
+                request(app).get(articleUrl + '/' + user._id + '/comments').end((err, res) => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(404);
+
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('does not exist');
+                    expect(body).to.have.property('status').equal(404);
+                    done();
+                });
+            });
+
+            it('Should retrieve saved comments on a new article', done => {
+                let data = {
+                    data: article.data,
+                    message: 'This is a cool new article message!',
+                    poster: user
+                };
+                request(app).post(articleCommentsUrl).send(data).end((err, res) => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(201);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('message').equal(data.message);
+                    request(app).get(articleCommentsUrl).end((err, res) => {
+                        body = res.body;
+
+                        expect(res.status).to.equal(200);
+                        expect(body).to.be.a('array');
+                        expect(body).to.have.lengthOf(1);
+                        done();
+                    });
+                });
+            });
+
+            after(() => {
                 return Article.remove({}).exec()
                     .then(() => ArticleData.remove({}).exec())
                     .then(() => Category.remove({}).exec())

@@ -13,6 +13,12 @@ exports.validateEmpty = (attr, message, reject, req) => {
     if (errors) reject(result.reject(errors[0].msg));
 };
 
+exports.validateEmptyOnly = (attr, message, reject, req) => {
+    req.checkBody(attr, message).notEmpty();
+    let errors = req.validationErrors();
+    if (errors) reject(result.reject(errors[0].msg));
+};
+
 exports.sanitizeTrim = (req, values) => {
     for (let i = 0; i < values.length; i++) {
         req.sanitize(values[i]).trim();

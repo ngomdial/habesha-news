@@ -8,8 +8,9 @@ const categoryDal = require('../category/dal');
 const userDal = require('../user/dal');
 const commentDal = require('../comment/dal');
 
+const commentController = require('../comment/cont');
+
 const result = require('../../util/res');
-const log = require('../../util/log');
 const validator = require('./validator');
 
 exports.create = (req, res) => {
@@ -90,4 +91,10 @@ exports.getComments = (req, res) => {
         .catch(reject => {
             result.errorReject(reject, res);
         });
+};
+
+exports.postComment = (req, res) => {
+    let article = req.article;
+    req.body.data = article.data._id;
+    commentController.create(req, res);
 };

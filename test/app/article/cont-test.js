@@ -11,6 +11,7 @@ const Article = require('../../../app/article/model');
 const ArticleData = require('../../../app/article-data/model');
 const Category = require('../../../app/category/model');
 const User = require('../../../app/user/model');
+const Comment = require('../../../app/comment/model');
 
 describe('article cont.js', () => {
     const baseUrl = process.env.BASE_URL + '/' + process.env.VERSION;
@@ -244,6 +245,7 @@ describe('article cont.js', () => {
                     .then(() => ArticleData.remove({}).exec())
                     .then(() => Category.remove({}).exec())
                     .then(() => User.remove({}).exec())
+                    .then(() => Comment.remove({}).exec())
                     .then(() => {
                         return request(app).post(signUpUserUrl).send({username, email, password});
                     })
@@ -314,7 +316,8 @@ describe('article cont.js', () => {
                 return Article.remove({}).exec()
                     .then(() => ArticleData.remove({}).exec())
                     .then(() => Category.remove({}).exec())
-                    .then(() => User.remove({}).exec());
+                    .then(() => User.remove({}).exec())
+                    .then(() => Comment.remove({}).exec());
             });
         });
     });

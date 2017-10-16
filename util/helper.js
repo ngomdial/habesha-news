@@ -7,7 +7,7 @@ const result = require('./res');
 
 const WORK_FACTOR = process.env.SALT_WORK_FACTOR;
 
-exports.contains = (doc, array) => {
+exports.containsId = (doc, array) => {
     const length = array.length;
     if (length === 0) return false;
     for (let i = 0; i < length; i++) {
@@ -18,7 +18,6 @@ exports.contains = (doc, array) => {
     }
     return false;
 };
-
 
 exports.validateEmpty = (attr, message, reject, req) => {
     req.checkBody(attr, message).trim().notEmpty();

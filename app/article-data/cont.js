@@ -49,37 +49,36 @@ exports.getFollowers = dataId => {
 };
 
 exports.follow = (req, res) => {
-    let data = req.articleData;
-    let follower;
+    let data = req.articleData, follower;
     validator.hasFollowFields(req)
         .then(user => {
             follower = user;
-            return userDal.findOne({_id: follower})
+            return userDal.findOne({_id: follower});
         })
         .then(found => {
             if (!found) {
                 result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
             } else {
-                if (helper.contains(found, data.followers)) {
+                console.log(data.followers);
+                if (helper.containsId(found, data.followers)) {
                     result.errorStatus(
                         `User with _id ${follower} is already following Article with _id ${data.article}`,
                         400, res
                     );
                 } else {
-                    data.followers.push(follower);
+                    data.followers.push(found);
                     return data.save();
                 }
             }
         })
-        .then(updated => {
-            result.dataStatus(updated.followers, 201, res);
+        .then(() => {
+            result.messageStatus(`User with _id ${follower} has been added as a follower`, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };
 
 exports.unfollow = (req, res) => {
-    let data = req.articleData;
-    let follower;
+    let data = req.articleData, follower;
     validator.hasFollowFields(req)
         .then(user => {
             follower = user;
@@ -89,8 +88,8 @@ exports.unfollow = (req, res) => {
             if (!found) {
                 result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
             } else {
-                if (helper.contains(found, data.followers)) {
-                    data.followers.pull(follower);
+                if (helper.containsId(found, data.followers)) {
+                    data.followers.pull(found);
                     return data.save();
                 } else {
                     result.errorStatus(
@@ -100,8 +99,8 @@ exports.unfollow = (req, res) => {
                 }
             }
         })
-        .then(updated => {
-            result.dataStatus(updated.followers, 201, res);
+        .then(() => {
+            result.messageStatus(`User with _id ${follower} has been removed as a follower`, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };

@@ -113,5 +113,33 @@ exports.getFollowers = (req, res) => {
 };
 
 exports.follow = (req, res) => {
-    // TODO: Fix this
+    let article = req.article;
+    articleDataDal.findOne({_id: article.data})
+        .then(articleData => {
+            if (!articleData) {
+                result.errorStatus(`ArticleData with _id ${dataId} does not exist`, 404, res);
+            } else {
+                req.articleData = articleData;
+                articleDataController.follow(req, res);
+            }
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
+};
+
+exports.unfollow = (req, res) => {
+    let article = req.article;
+    articleDataDal.findOne({_id: article.data})
+        .then(articleData => {
+            if (!articleData) {
+                result.errorStatus(`ArticleData with _id ${dataId} does not exist`, 404, res);
+            } else {
+                req.articleData = articleData;
+                articleDataController.unfollow(req, res);
+            }
+        })
+        .catch(reject => {
+            result.errorReject(reject, res);
+        });
 };

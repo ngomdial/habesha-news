@@ -59,7 +59,6 @@ exports.follow = (req, res) => {
             if (!found) {
                 result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
             } else {
-                console.log(data.followers);
                 if (helper.containsId(found, data.followers)) {
                     result.errorStatus(
                         `User with _id ${follower} is already following Article with _id ${data.article}`,
@@ -100,7 +99,7 @@ exports.unfollow = (req, res) => {
             }
         })
         .then(() => {
-            result.messageStatus(`User with _id ${follower} has been removed as a follower`, 201, res);
+            result.messageStatus(`User with _id ${follower} has been removed as a follower`, 200, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };

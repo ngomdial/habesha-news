@@ -97,7 +97,7 @@ exports.unfollow = (req, res) => {
                 } else {
                     return Promise.reject(
                         result.rejectStatus(`User with _id ${follower} is not following Article with _id ${data.article}`,
-                            404)
+                            400)
                     );
                 }
             }

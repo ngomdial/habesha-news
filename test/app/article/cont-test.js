@@ -323,8 +323,8 @@ describe('article cont.js', () => {
 
         describe('Article followers test', () => {
 
-            let user, article, articleData, category;
-            let singleArticleDataUrl, articleDataUrl, followersUrl, followUrl, unfollowUrl;
+            let user, article, category;
+            let singleArticleUrl, articleUrl, followersUrl, followUrl, unfollowUrl;
 
             before(() => {
                 return Article.remove({}).exec()
@@ -341,22 +341,21 @@ describe('article cont.js', () => {
                     .then(res => {
                         category = res.body;
                         let data = {headline, source_url, image_url, summary, category, poster: user};
-                        return request(app).post(articleUrl).send(data);
+                        return request(app).post(baseUrl + '/articles').send(data);
                     })
                     .then(res => {
                         article = res.body;
-                        articleData = article.data;
 
-                        articleDataUrl = baseUrl + '/article-data';
-                        singleArticleDataUrl = articleDataUrl + '/' + articleData._id;
-                        followersUrl = singleArticleDataUrl + '/followers';
-                        followUrl = singleArticleDataUrl + '/follow';
-                        unfollowUrl = singleArticleDataUrl  + '/unfollow';
+                        articleUrl = baseUrl + '/articles';
+                        singleArticleUrl = articleUrl + '/' + article._id;
+                        followersUrl = singleArticleUrl + '/followers';
+                        followUrl = singleArticleUrl + '/follow';
+                        unfollowUrl = singleArticleUrl  + '/unfollow';
                     });
             });
 
             it('Should fail to follow article if article-data does not exist', done => {
-                request(app).post(articleDataUrl + '/' + user._id + '/follow').send({user}).end((err, res) => {
+                request(app).post(articleUrl + '/' + user._id + '/follow').send({user}).end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(404);
@@ -369,7 +368,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail to unfollow article if article-data does not exist', done => {
-                request(app).post(articleDataUrl + '/' + user._id + '/unfollow').send({user}).end((err, res) => {
+                request(app).post(articleUrl + '/' + user._id + '/unfollow').send({user}).end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(404);

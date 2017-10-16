@@ -320,6 +320,67 @@ describe('article cont.js', () => {
                     .then(() => Comment.remove({}).exec());
             });
         });
+
+        describe('Article followers test', () => {
+
+            let user, article, articleData, category;
+            let singleArticleDataUrl, articleDataUrl, followersUrl, followUrl, unfollowUrl;
+
+            before(() => {
+                return Article.remove({}).exec()
+                    .then(() => ArticleData.remove({}).exec())
+                    .then(() => Category.remove({}).exec())
+                    .then(() => User.remove({}).exec())
+                    .then(() => {
+                        return request(app).post(signUpUserUrl).send({username, email, password});
+                    })
+                    .then(res => {
+                        user = res.body;
+                        return request(app).post(categoryUrl).send({name: 'politics'});
+                    })
+                    .then(res => {
+                        category = res.body;
+                        let data = {headline, source_url, image_url, summary, category, poster: user};
+                        return request(app).post(articleUrl).send(data);
+                    })
+                    .then(res => {
+                        article = res.body;
+                        articleData = article.data;
+
+                        articleDataUrl = baseUrl + '/article-data';
+                        singleArticleDataUrl = articleDataUrl + '/' + articleData._id;
+                        followersUrl = singleArticleDataUrl + '/followers';
+                        followUrl = singleArticleDataUrl + '/follow';
+                        unfollowUrl = singleArticleDataUrl  + '/unfollow';
+                    });
+            });
+
+            it('Should fail to follow article if article-data does not exist', done => {
+                request(app).post(articleDataUrl + '/' + user._id + '/follow').send({user}).end((err, res) => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(404);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').to.equal(true);
+                    expect(body).to.have.property('message').contain('does not exist');
+                    expect(body).to.have.property('status').to.equal(404);
+                    done();
+                });
+            });
+
+            it('Should fail to unfollow article if article-data does not exist', done => {
+                request(app).post(articleDataUrl + '/' + user._id + '/unfollow').send({user}).end((err, res) => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(404);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').to.equal(true);
+                    expect(body).to.have.property('message').contain('does not exist');
+                    expect(body).to.have.property('status').to.equal(404);
+                    done();
+                });
+            });
+        });
     });
 
     after(() => {

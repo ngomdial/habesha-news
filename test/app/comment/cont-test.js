@@ -227,6 +227,7 @@ describe('comment cont.js', () => {
                 });
             });
         });
+
         afterEach(() => Comment.remove({}).exec());
     });
 });

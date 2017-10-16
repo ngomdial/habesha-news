@@ -1,11 +1,12 @@
 'use strict';
 
+const Promise = require('bluebird');
+
 const result = require('../../util/res');
 const helper = require('../../util/helper');
 
 const articleDataDal = require('./dal');
 const userDal = require('../user/dal');
-const Promise = require('bluebird');
 const validator = require('../article/validator');
 
 const ArticleData = require('../article-data/model');
@@ -57,12 +58,13 @@ exports.follow = (req, res) => {
         })
         .then(found => {
             if (!found) {
-                result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${follower} does not exist`, 404)
+                );
             } else {
                 if (helper.containsId(found, data.followers)) {
-                    result.errorStatus(
-                        `User with _id ${follower} is already following Article with _id ${data.article}`,
-                        400, res
+                    return Promise.reject(result.rejectStatus(
+                        `User with _id ${follower} is already following Article with _id ${data.article}`, 400)
                     );
                 } else {
                     data.followers.push(found);
@@ -85,15 +87,17 @@ exports.unfollow = (req, res) => {
         })
         .then(found => {
             if (!found) {
-                result.errorStatus(`User with _id ${follower} does not exist`, 404, res);
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${follower} does not exist`, 404)
+                );
             } else {
                 if (helper.containsId(found, data.followers)) {
                     data.followers.pull(found);
                     return data.save();
                 } else {
-                    result.errorStatus(
-                        `User with _id ${follower} is not following Article with _id ${data.article}`,
-                        400, res
+                    return Promise.reject(
+                        result.rejectStatus(`User with _id ${follower} is not following Article with _id ${data.article}`,
+                            404)
                     );
                 }
             }

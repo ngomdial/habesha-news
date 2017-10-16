@@ -11,5 +11,6 @@ router.get('/:article_id', controller.findOne);
 router.get('/:article_id/comments', controller.getComments);
 router.post('/:article_id/comments', controller.postComment);
 router.get('/:article_id/followers', controller.getFollowers);
+router.post('/:article_id/follow', controller.follow);
 
 module.exports = router;

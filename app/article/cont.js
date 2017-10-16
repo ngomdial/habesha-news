@@ -113,5 +113,5 @@ exports.getFollowers = (req, res) => {
 };
 
 exports.follow = (req, res) => {
-
+    // TODO: Fix this
 };

@@ -147,6 +147,10 @@ describe('article cont.js', () => {
             });
         });
 
+        // TODO: Finish this up
+/*        describe('Article retrieval test', () => {
+        });*/
+
         describe('Article data saving test', () => {
             const create_category_url = baseUrl + '/categories';
 

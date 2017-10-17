@@ -3,8 +3,9 @@
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
+const env = process.env.NODE_ENV;
 let url = process.env.DATABASE_URL;
-if (process.env.NODE_ENV === 'test') {
+if (env === 'test') {
     url += '_test';
 }
 
@@ -13,5 +14,8 @@ mongoose.plugin(require('mongoose-hidden')({
 }));
 mongoose
     .connect(url, {useMongoClient: true})
-    .then(() => console.log('Database connection established'))
+    .then(() => {
+        console.log('Database connection established');
+        if (env === 'test') console.log(`Using test db: ${url}`);
+    })
     .catch(err => console.error('Database connection failed', err));

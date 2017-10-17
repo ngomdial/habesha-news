@@ -8,6 +8,8 @@ const articleDataDal = require('../article-data/dal');
 const result = require('../../util/res');
 const validator = require('./validator');
 
+const helper = require('../../util/helper');
+
 exports.create = (req, res) => {
     let data, message, poster, comment;
     validator.hasRequiredFields(req)
@@ -64,3 +66,59 @@ exports.validateOne = (req, res, next, commentId) => {
 };
 
 exports.findOne = (req, res) => result.data(req.comment, res);
+
+exports.likeComment = (req, res) => {
+    let comment = req.comment, liker;
+    validator.hasRequiredRateFields(req)
+        .then(user => {
+            liker = user;
+            return userDal.findOne({_id: user})
+        })
+        .then(user => {
+            if (!user) {
+                return Promise.reject(result.reject(`User with _id ${liker} does not exist`));
+            } else {
+                if (helper.containsId(user, comment.likes)) {
+                    return Promise.reject(result.reject(
+                        `User with _id ${liker} has already liked Comment with _id ${comment._id}`
+                    ));
+                } else {
+                    comment.likes.push(user);
+                    comment.dislikes.pull(user);
+                    return comment.save();
+                }
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${liker} liked Comment with _id ${comment._id}`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.dislikeComment = (req, res) => {
+    let comment = req.comment, liker;
+    validator.hasRequiredRateFields(req)
+        .then(user => {
+            liker = user;
+            return userDal.findOne({_id: user})
+        })
+        .then(user => {
+            if (!user) {
+                return Promise.reject(result.reject(`User with _id ${liker} does not exist`));
+            } else {
+                if (helper.containsId(user, comment.dislikes)) {
+                    return Promise.reject(result.reject(
+                        `User with _id ${liker} has already disliked Comment with _id ${comment._id}`
+                    ));
+                } else {
+                    comment.dislikes.push(user);
+                    comment.likes.pull(user);
+                    return comment.save();
+                }
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${liker} disliked Comment with _id ${comment._id}`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};

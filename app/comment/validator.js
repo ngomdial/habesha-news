@@ -14,3 +14,10 @@ exports.hasRequiredFields = req => {
         resolve(req.body);
     });
 };
+
+exports.hasRequiredRateFields = req => {
+    return new Promise((resolve, reject) => {
+        helper.validateEmptyOnly('user', 'No user provided', reject, req);
+        resolve(req.body.user);
+    });
+};

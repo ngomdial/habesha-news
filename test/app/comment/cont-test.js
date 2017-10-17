@@ -228,6 +228,19 @@ describe('comment cont.js', () => {
             });
         });
 
+        it('Should fail to retrieve a comment that does not exist', done => {
+            request(app).get(commentsUrl + '/' + user._id).end((err, res) => {
+                body = res.body;
+
+                expect(res.status).to.equal(404);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('error').equal(true);
+                expect(body).to.have.property('message').contain('does not exist');
+                expect(body).to.have.property('status').equal(404);
+                done();
+            });
+        });
+
         afterEach(() => Comment.remove({}).exec());
     });
 });

@@ -4,7 +4,6 @@ const chai = require('chai');
 const sinon = require('sinon');
 const expect = chai.expect;
 
-const config = require('./config');
 const test = require('./test');
 const data = require('../../config/data');
 
@@ -12,7 +11,7 @@ describe('Users cont.js', () => {
 
     let body;
 
-    beforeEach(() => config.deleteAll());
+    beforeEach(() => test.deleteAll());
 
     describe('Login Test', () => {
         let res;
@@ -90,12 +89,12 @@ describe('Users cont.js', () => {
             });
         });
 
-        afterEach(() => config.deleteAll());
+        afterEach(() => test.deleteAll());
     });
 
     describe('Signup Test', () => {
 
-        beforeEach(() => config.deleteAll());
+        beforeEach(() => test.deleteAll());
 
         it('Should fail if username is missing', done => {
             test.signUp('  ').end((err, res) => {
@@ -187,8 +186,8 @@ describe('Users cont.js', () => {
             });
         });
 
-        afterEach(() => config.deleteAll());
+        afterEach(() => test.deleteAll());
     });
 
-    afterEach(() => config.deleteAll());
+    afterEach(() => test.deleteAll());
 });

@@ -7,13 +7,18 @@ const expect = chai.expect;
 
 const app = require('../../../index');
 
+const test = require('./test');
+const userTest = require('../user/test');
+
+const data = require('../../config/data');
+
 const Article = require('../../../app/article/model');
 const ArticleData = require('../../../app/article-data/model');
 const Category = require('../../../app/category/model');
 const User = require('../../../app/user/model');
 const Comment = require('../../../app/comment/model');
 
-describe('article cont.js', () => {
+describe('Articles cont.js', () => {
     const baseUrl = process.env.BASE_URL + '/' + process.env.VERSION;
     const signUpUserUrl = baseUrl + '/users/signup';
     const articleUrl = baseUrl + '/articles';
@@ -21,16 +26,11 @@ describe('article cont.js', () => {
 
     let body;
 
-    before(() => {
-        return Article.remove({}).exec()
-            .then(() => ArticleData.remove({}).exec())
-            .then(() => Category.remove({}).exec())
-            .then(() => User.remove({}).exec());
-    });
+    before(() => test.deleteAll());
 
     const username = 'saladthieves', email = 'salad@mail.com', password = 'something_else';
 
-    describe('Post article test', () => {
+    describe('Post Article Test', () => {
 
         let postArticle = data => request(app).post(articleUrl).send(data);
 
@@ -47,26 +47,9 @@ describe('article cont.js', () => {
             poster = '59e1fb19032cc7284ab7c55c';
 
         describe('Validate input test', () => {
-
-            it('Should fail validation if req.body is empty', done => {
-                let data = {};
-                postArticle(data).end((err, res) => {
-                    body = res.body;
-
-                    expect(res.status).to.equal(400);
-                    expect(body).to.be.a('object');
-                    expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message');
-                    expect(body).to.have.property('status').equal(400);
-                    done();
-                });
-            });
-
             it('Should fail validation if headline is missing', done => {
-                let data = {source_url, image_url, summary, category, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle(' ').end((err, res) => {
                     body = res.body;
-
                     expect(res.status).to.equal(400);
                     expect(body).to.be.a('object');
                     expect(body).to.have.property('error').equal(true);
@@ -77,8 +60,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail validation if source_url is missing', done => {
-                let data = {headline, image_url, summary, category, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle(undefined, '  ').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(400);
@@ -91,8 +73,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail validation if image_url is missing', done => {
-                let data = {headline, source_url, summary, category, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle(undefined, undefined, '  ').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(400);
@@ -105,8 +86,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail validation if summary is missing', done => {
-                let data = {headline, source_url, image_url, category, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle(undefined, undefined, undefined, '  ').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(400);
@@ -119,8 +99,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail validation if category is missing', done => {
-                let data = {headline, source_url, image_url, summary, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle(undefined, undefined, undefined, undefined, '').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(400);
@@ -133,8 +112,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail validation if poster is missing', done => {
-                let data = {headline, source_url, image_url, summary, category};
-                postArticle(data).end((err, res) => {
+                test.postArticle(undefined, undefined, undefined, undefined, undefined, '').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(400);
@@ -148,22 +126,16 @@ describe('article cont.js', () => {
         });
 
         // TODO: Finish this up
-/*        describe('Article retrieval test', () => {
-        });*/
+        /*        describe('Article retrieval test', () => {
+         });*/
 
         describe('Article data saving test', () => {
             const create_category_url = baseUrl + '/categories';
 
-            beforeEach(() => {
-                return Article.remove({}).exec()
-                    .then(() => ArticleData.remove({}).exec())
-                    .then(() => Category.remove({}).exec())
-                    .then(() => User.remove({}).exec());
-            });
+            beforeEach(() => test.deleteAll());
 
             it('Should fail posting if category does not exist', done => {
-                let data = {headline, source_url, image_url, summary, category, poster};
-                postArticle(data).end((err, res) => {
+                test.postArticle().end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(404);
@@ -245,31 +217,16 @@ describe('article cont.js', () => {
             let articleCommentsUrl;
 
             before(() => {
-                return Article.remove({}).exec()
-                    .then(() => ArticleData.remove({}).exec())
-                    .then(() => Category.remove({}).exec())
-                    .then(() => User.remove({}).exec())
-                    .then(() => Comment.remove({}).exec())
-                    .then(() => {
-                        return request(app).post(signUpUserUrl).send({username, email, password});
-                    })
-                    .then(res => {
-                        user = res.body;
-                        return request(app).post(categoryUrl).send({name: 'politics'});
-                    })
-                    .then(res => {
-                        category = res.body;
-                        let data = {headline, source_url, image_url, summary, category, poster: user};
-                        return request(app).post(articleUrl).send(data);
-                    })
-                    .then(res => {
-                        article = res.body;
-                        articleCommentsUrl = baseUrl + '/articles/' + article._id + '/comments';
-                    });
+                return test.createArticle().then(data => {
+                    user = data.user;
+                    article = data.article;
+                    category = data.category;
+                    articleCommentsUrl = data.articleCommentsUrl;
+                });
             });
 
             it('Should retrieve empty comments on a new article', done => {
-                request(app).get(articleCommentsUrl).end((err, res) => {
+                test.getArticleComments(articleCommentsUrl).end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(200);
@@ -280,7 +237,7 @@ describe('article cont.js', () => {
             });
 
             it('Should fail to retrieve comments if article does not exist', done => {
-                request(app).get(articleUrl + '/' + user._id + '/comments').end((err, res) => {
+                test.getArticleComments(data.articlesUrl + '/' + user._id + '/comments').end((err, res) => {
                     body = res.body;
 
                     expect(res.status).to.equal(404);
@@ -316,13 +273,7 @@ describe('article cont.js', () => {
                 });
             });
 
-            after(() => {
-                return Article.remove({}).exec()
-                    .then(() => ArticleData.remove({}).exec())
-                    .then(() => Category.remove({}).exec())
-                    .then(() => User.remove({}).exec())
-                    .then(() => Comment.remove({}).exec());
-            });
+            after(() => test.deleteAll());
         });
 
         describe('Article followers test', () => {
@@ -354,7 +305,7 @@ describe('article cont.js', () => {
                         singleArticleUrl = articleUrl + '/' + article._id;
                         followersUrl = singleArticleUrl + '/followers';
                         followUrl = singleArticleUrl + '/follow';
-                        unfollowUrl = singleArticleUrl  + '/unfollow';
+                        unfollowUrl = singleArticleUrl + '/unfollow';
                     });
             });
 

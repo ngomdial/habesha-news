@@ -27,7 +27,7 @@ exports.validateEmpty = (attr, message, reject, req) => {
 
 exports.validateEmptyOnly = (attr, message, reject, req) => {
     req.checkBody(attr, message).notEmpty();
-    let errors = req.validationErrors();
+    let errors = req.validationErrors();        // TODO: Fix trimming issues
     if (errors) reject(result.reject(errors[0].msg));
 };
 

@@ -2,14 +2,15 @@
 
 const request = require('supertest');
 
-const User = require('../../../app/user/model');
+const userConfig = require('./config');
+const profileConfig = require('../profile/config');
 
 const app = require('../../../index');
 const data = require('../../config/data');
 
 const {loginUrl, signUpUrl} = data;
 
-exports.deleteAll = () => User.remove({}).exec();
+exports.deleteAll = () => userConfig.deleteAll().then(() => profileConfig.deleteAll());
 
 exports.signUp = (username = data.username, email = data.email, password = data.password) => {
     return request(app).post(signUpUrl).send({username, email, password});

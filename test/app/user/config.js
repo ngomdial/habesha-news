@@ -1,6 +1,5 @@
 'use strict';
 
-const userConfig = require('./test');
-const profileConfig = require('../profile/config');
+const User = require('../../../app/user/model');
 
-exports.deleteAll = () => userConfig.deleteAll().then(() => profileConfig.deleteAll());
+exports.deleteAll = () => User.remove({}).exec();

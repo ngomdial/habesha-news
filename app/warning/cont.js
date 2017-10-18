@@ -5,11 +5,12 @@ const result = require('../../util/res');
 const validator = require('./validator');
 
 const warningDal = require('./dal');
+const articleDal = require('../article/dal');
 const articleDataDal = require('../article-data/dal');
 const userDal = require('../user/dal');
 
-exports.create = (req, res) => {
-    let articleData, message, poster;
+exports.createWarning = (req, res) => {
+    let articleData, message, poster, warning;
 
     validator.hasRequiredFields(req)
         .then(data => {
@@ -22,17 +23,40 @@ exports.create = (req, res) => {
             if (!found) {
                 return Promise.reject(result.rejectStatus(`ArticleData with _id ${articleData} does not exist`, 404));
             } else {
-                return userDal.findOne({_id: poster});
+                articleData = found;
+                if (articleData.warnings.length >= 3) {
+                    return Promise.reject(result.rejectStatus(
+                        `Cannot post a new warning as the article has already reached 3 Warnings and failed`, 400
+                    ));
+                } else {
+                    return userDal.findOne({_id: poster});
+                }
             }
         })
         .then(found => {
             if (!found) {
                 return Promise.reject(result.rejectStatus(`User with _id ${poster} does not exist`, 404));
             } else {
-                return warningDal.create(articleData, message, poster);
+                return warningDal.create(articleData._id, message, poster);
             }
         })
-        .then(warning => {
+        .then(created => {
+            warning = created;
+            articleData.warnings.push(created);
+            if (articleData.warnings.length >= 3) {
+                return articleDal.findOne({_id: articleData.article})
+                    .then(article => {
+                        article.status = 'failed';
+                        return articleDal.update(article);
+                    })
+                    .then(() => {
+                        return articleDataDal.update(articleData);
+                    });
+            } else {
+                return articleDataDal.update(articleData);
+            }
+        })
+        .then(() => {
             result.dataStatus(warning, 201, res);
         })
         .catch(reject => {

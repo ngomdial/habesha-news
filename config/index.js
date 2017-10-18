@@ -15,7 +15,7 @@ mongoose.plugin(require('mongoose-hidden')({
 mongoose
     .connect(url, {useMongoClient: true})
     .then(() => {
-        console.log('Database connection established');
+        console.log('Database connected');
         if (env === 'test') console.log(`Using test db: ${url}`);
     })
     .catch(err => console.error('Database connection failed', err));

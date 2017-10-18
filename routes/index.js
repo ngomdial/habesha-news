@@ -1,23 +1,18 @@
 'use strict';
 
 const router = require('express').Router();
+const result = require('../util/res');
 
 router.get('/', (req, res) => {
-    res.json({
+    const data = {
         author:     process.env.AUTHOR,
         version:    process.env.VERSION,
         port:       process.env.PORT,
-        env:       process.env.NODE_ENV,
-        base_url:   process.env.BASE_URL + '/' + process.env.VERSION
-    });
+        env:        process.env.NODE_ENV,
+        base_url:   process.env.BASE_URL + '/' + process.env.VERSION,
+        status:     'running'
+    };
+    result.data(data, res);
 });
-
-router.use('/users', require('./users'));
-router.use('/profiles', require('./profiles'));
-router.use('/articles', require('./articles'));
-router.use('/categories', require('./categories'));
-router.use('/article-data', require('./article-data'));
-router.use('/comments', require('./comments'));
-router.use('/warnings', require('./warnings'));
 
 module.exports = router;

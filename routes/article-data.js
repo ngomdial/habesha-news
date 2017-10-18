@@ -11,4 +11,8 @@ router.get('/:data_id/followers', controller.findFollowers);
 router.post('/:data_id/follow', controller.follow);
 router.post('/:data_id/unfollow', controller.unfollow);
 
+router.get('/:data_id/votes', controller.getVotes);
+router.post('/:data_id/votes', controller.addVote);
+// TODO: Add vote endpoint
+
 module.exports = router;

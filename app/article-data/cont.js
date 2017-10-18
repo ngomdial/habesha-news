@@ -5,6 +5,7 @@ const Promise = require('bluebird');
 const result = require('../../util/res');
 const helper = require('../../util/helper');
 
+const articleDal = require('../article/dal');
 const articleDataDal = require('./dal');
 const userDal = require('../user/dal');
 const validator = require('../article/validator');
@@ -104,6 +105,63 @@ exports.unfollow = (req, res) => {
         })
         .then(() => {
             result.messageStatus(`User with _id ${follower} has been removed as a follower`, 200, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.getVotes = (req, res) => {
+    let data = req.articleData;
+    result.data(data.voters, res);
+};
+
+exports.addVote = (req, res) => {
+    let data = req.articleData, user;
+    validator.hasVoteFields(req)
+        .then(body => {
+            user = body.user;
+            return userDal.findOne({_id: user});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(result.rejectStatus(`User with _id ${user} does not exist`, 404));
+            } else {
+                return articleDal.findOne({_id: data.article});
+            }
+        })
+        .then(found => {
+            const status = found.status;
+            if (status === 'failed') {
+                return Promise.reject(result.rejectStatus(
+                    `Article with _id ${found._id} cannot be voted on as it has failed`, 400
+                ));
+            } else {
+                const votes = data.voters.length;
+                if (voters >= 10) {
+                    return Promise.reject(result.rejectStatus(
+                        `Article with _id ${data.article} already has a max of 10 votes to be approved`, 400
+                    ));
+                } else {
+                    if (helper.containsId(found, data.voters)) {
+                        return Promise.reject(result.rejectStatus(
+                            `User with _id ${user} has already voted on Article with _id ${data.article}`, 400
+                        ));
+                    } else {
+                        data.voters.push(found);
+                        return articleDataDal.update(data);
+                    }
+                }
+            }
+        })
+        .then(updated => {
+
+            if (updated.voters.length === 10) {
+                return articleDal.findOne({_id: data.article})
+                    .then(article => {
+                        article.status = 'approved';
+                        return articleDal.update(article);
+                    });
+            }
+            result.dataStatus(updated, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };

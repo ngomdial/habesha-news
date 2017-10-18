@@ -107,3 +107,7 @@ exports.unfollow = (req, res) => {
         })
         .catch(reject => result.errorReject(reject, res));
 };
+
+exports.warn = (req, res) => {
+
+};

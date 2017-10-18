@@ -13,5 +13,6 @@ router.post('/:article_id/comments', controller.postComment);
 router.get('/:article_id/followers', controller.getFollowers);
 router.post('/:article_id/follow', controller.follow);
 router.post('/:article_id/unfollow', controller.unfollow);
+router.post('/:article_id/warn', controller.createWarning);
 
 module.exports = router;

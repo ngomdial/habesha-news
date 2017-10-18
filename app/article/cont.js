@@ -10,6 +10,7 @@ const commentDal = require('../comment/dal');
 
 const commentController = require('../comment/cont');
 const articleDataController = require('../article-data/cont');
+const warningController = require('../warning/cont');
 
 const result = require('../../util/res');
 const validator = require('./validator');
@@ -139,4 +140,10 @@ exports.unfollow = (req, res) => {
         .catch(reject => {
             result.errorReject(reject, res);
         });
+};
+
+exports.createWarning = (req, res) => {
+    let article = req.article;
+    req.body.data = article.data;
+    warningController.createWarning(req, res);
 };

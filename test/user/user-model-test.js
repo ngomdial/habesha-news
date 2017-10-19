@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-const data = require('./user-data');
+const data = require('./../data');
 
 const User = require('../../app/user/user-model');
 

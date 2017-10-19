@@ -15,4 +15,6 @@ router.get('/', (req, res) => {
     result.data(data, res);
 });
 
+router.use('/users', require('../app/user/user-router'));
+
 module.exports = router;

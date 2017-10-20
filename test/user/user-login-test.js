@@ -3,11 +3,11 @@
 const expect = require('chai').expect;
 
 const userConfig = require('./user-config');
-const data = require('../data');
+const data = require('../../config/data');
 
 describe('User Login Test', () => {
 
-    let {username, password} = data.data;
+    let {username, email, password} = data.data;
 
     let body;
 
@@ -15,7 +15,13 @@ describe('User Login Test', () => {
         return userConfig.deleteAll();
     });
 
-    it('Should fail login if username is missing', () => {
+    it('Should fail login if username is missing', done => {
+        userConfig.login('').end((err, res) => {
+            body = res.body;
+
+            expect(res.status).to.equal(400);
+            done();
+        });
         return userConfig.login('').then(res => {
             body = res.body;
 
@@ -26,6 +32,7 @@ describe('User Login Test', () => {
             expect(body).to.have.property('status').equal(400);
         });
     });
+
 
     it('Should fail login if password is missing', () => {
         return userConfig.login(undefined, ' ').then(res => {
@@ -51,15 +58,20 @@ describe('User Login Test', () => {
     });
 
     describe('User Login With Wrong Credentials Test', () => {
-        before(() => {
+        let user;
+        beforeEach(() => {
             return userConfig.deleteAll()
                 .then(() => userConfig.signUp())
-                .then(res => expect(res.status).to.equal(201));
+                .then(res => {
+                    user = res.body;
+                    expect(res.status).to.equal(201)
+                });
         });
 
         it('Should fail login if username does not exist', () => {
             return userConfig.login('helloworld').then(res => {
                 body = res.body;
+
 
                 expect(res.status).to.equal(400);
                 expect(body).to.be.a('object');
@@ -82,7 +94,7 @@ describe('User Login Test', () => {
         });
 
         it('Should fail login if username and password do not exist', () => {
-            return userConfig.login('cool_uzername', 'cool_password').then(res => {
+            return userConfig.login('some_username_unwanted', 'some_weird_passwordz').then(res => {
                 body = res.body;
 
                 expect(res.status).to.equal(400);
@@ -93,7 +105,20 @@ describe('User Login Test', () => {
             });
         });
 
-        after(() => {
+        it('Should login if username and password are correct', () => {
+            return userConfig.login().then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(200);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('token');
+                expect(body).to.have.property('user');
+                expect(body.user).to.have.property('username').equal(username);
+                expect(body.user).to.have.property('email').equal(email);
+            });
+        });
+
+        afterEach(() => {
             return userConfig.deleteAll();
         });
     });

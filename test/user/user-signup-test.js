@@ -3,7 +3,7 @@
 const expect = require('chai').expect;
 
 const userConfig = require('./user-config');
-const data = require('../data');
+const data = require('../../config/data');
 
 describe('User Sign-Up Test', () => {
 

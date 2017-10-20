@@ -3,7 +3,7 @@
 const request = require('supertest');
 
 const app = require('../../index');
-const data = require('../data');
+const data = require('../../config/data');
 
 const User = require('../../app/user/user-model');
 

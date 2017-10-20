@@ -81,8 +81,7 @@ describe('User Sign-Up Test', () => {
             expect(res.status).to.equal(400);
             expect(body).to.be.a('object');
             expect(body).to.have.property('error').equal(true);
-            expect(body).to.have.property('message').contains(username);
-            expect(body).to.have.property('message').contains('already taken');
+            expect(body).to.have.property('message').contains('username is already taken');
             expect(body).to.have.property('status').equal(400);
         });
     });
@@ -94,8 +93,7 @@ describe('User Sign-Up Test', () => {
             expect(res.status).to.equal(400);
             expect(body).to.be.a('object');
             expect(body).to.have.property('error').equal(true);
-            expect(body).to.have.property('message').contains(email);
-            expect(body).to.have.property('message').contains('already taken');
+            expect(body).to.have.property('message').contains('email is already taken');
             expect(body).to.have.property('status').equal(400);
         });
     });

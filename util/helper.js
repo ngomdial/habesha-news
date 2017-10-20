@@ -32,11 +32,27 @@ exports.sanitizeTrim = (req, values) => {
     }
 };
 
+exports.generateToken = user => {
+    const data = {
+        id: user._id,
+        created_at: user.created_at,
+        updated_at: user.updated_at
+    };
+
+    let token = jwt.sign(data, process.env.API_JWT_USER_SECRET);
+    return Promise.resolve(token);
+};
+
 exports.comparePassword = (password, hash) => {
-    return bcrypt.compare(password, hash)
-        .catch(error => {
-            return Promise.reject(result.reject(`Comparing password failed: ${error}`));
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(password, hash, (err, valid) => {
+            if (err) {
+                reject(result.reject(`Password comparison failed: ${err}`));
+            } else {
+                resolve(valid);
+            }
         });
+    });
 };
 
 exports.hashPassword = (password, salt) => {

@@ -8,6 +8,39 @@ const userDal = require('./user-dal');
 
 const validator = require('./user-validator');
 
+exports.login = (req, res) => {
+    let username, password, user;
+    validator.hasLoginFields(req)
+        .then(body => {
+            username = body.username;
+            password = body.password;
+            return userDal.findOne({username});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(
+                    result.reject(`Invalid username or password`)
+                );
+            } else {
+                user = found;
+                return helper.comparePassword(password, user.password);
+            }
+        })
+        .then(valid => {
+            if (valid) {
+                return helper.generateToken(user);
+            } else {
+                return Promise.reject(
+                    result.reject(`Invalid username or password`)
+                );
+            }
+        })
+        .then(token => {
+            result.data({token, user}, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
 exports.signUp = (req, res) => {
     let username, email, password;
     validator.hasSignUpFields(req)
@@ -20,7 +53,7 @@ exports.signUp = (req, res) => {
         .then(found => {
             if (found) {
                 return Promise.reject(
-                    result.reject(`Username '${username}' is already taken`)
+                    result.reject(`This username is already taken`)
                 );
             } else {
                 return userDal.findOne({email});
@@ -29,7 +62,7 @@ exports.signUp = (req, res) => {
         .then(found => {
             if (found) {
                 return Promise.reject(
-                    result.reject(`Email '${email}' is already taken`)
+                    result.reject(`This email is already taken`)
                 );
             } else {
                 return helper.genSalt();

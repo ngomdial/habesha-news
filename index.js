@@ -7,7 +7,7 @@ const app           = require('express')();
 const bodyParser    = require('body-parser');
 const port          = process.env.PORT;
 const env           = process.env.NODE_ENV;
-const base_url      = process.env.BASE_URL + '/' + process.env.VERSION;
+const baseUrl       = process.env.BASE_URL + '/' + process.env.VERSION;
 // TODO: Add jwt authentication
 const bearerToken   = require('express-bearer-token');
 const validator     = require('express-validator');
@@ -21,7 +21,7 @@ app.use(validator());
 app.use(bearerToken());
 // TODO: Setup authentication middleware
 
-app.use(base_url, require('./routes'));
+app.use(baseUrl, require('./routes'));
 
 app.listen(port, () => log.i(`Habesha News API running in [${env}] on port ${port}`));
 

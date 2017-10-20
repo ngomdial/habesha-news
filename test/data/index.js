@@ -1,6 +1,6 @@
 'use strict';
 
-const baseUrl = `${process.env.BASE_URL}/${process.env.VERSION}`;
+const baseUrl = process.env.BASE_URL + '/' + process.env.VERSION;
 
 const username = 'saladthieves';
 const email = 'salad@mail.com';

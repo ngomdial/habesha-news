@@ -73,3 +73,24 @@ exports.signUp = (req, res) => {
         .then(user => result.dataStatus(user, 201, res))
         .catch(reject => result.errorReject(reject, res));
 };
+
+exports.validateOne = (req, res, next, id) => {
+    userDal.findOne({_id: id})
+        .then(user => {
+            if (!user) {
+                result.error(`User with _id ${id} does not exist`, res);
+            } else {
+                req.user = user;
+                next();
+            }
+        });
+};
+
+exports.findOne = (req, res) => {
+    result.data(req.user, res);
+};
+
+exports.findAll = (req, res) => {
+    return userDal.findAll()
+        .then(users => result.data(users, res));
+};

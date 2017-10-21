@@ -11,4 +11,4 @@ exports.update = (user, data) => {
 
 exports.findOne = query => User.findOne(query).exec();
 
-exports.find = query => User.find(query).exec();
+exports.findAll = query => User.find(query).exec();

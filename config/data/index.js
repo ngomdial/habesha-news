@@ -1,6 +1,10 @@
 'use strict';
 
-const baseUrl = process.env.BASE_URL + '/' + process.env.VERSION;
+require('dotenv').config();
+
+const author = process.env.AUTHOR;
+const version = process.env.VERSION;
+const baseUrl = process.env.BASE_URL + '/' + version;
 
 const username = 'saladthieves';
 const email = 'salad@mail.com';
@@ -14,9 +18,10 @@ const usersLoginUrl = usersUrl + '/login';
 const usersSignUpUrl = usersUrl + '/signup';
 
 exports.data = {
+    author, version, baseUrl,
+
     username, email, password,
-    usersUrl,
-    usersLoginUrl, usersSignUpUrl,
+    usersUrl, usersLoginUrl, usersSignUpUrl,
 
     categoryName, categoryColor
 };

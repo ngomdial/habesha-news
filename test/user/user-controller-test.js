@@ -21,6 +21,7 @@ describe('User Controller Test', () => {
     it('Should retrieve an empty list of users', () => {
         return userConfig.findAll().then(res => {
             body = res.body;
+
             expect(body).to.be.a('array');
             expect(body).to.have.lengthOf(0);
         });

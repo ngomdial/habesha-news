@@ -13,6 +13,7 @@ const {username, email, password, usersUrl, usersSignUpUrl, usersLoginUrl} = dat
 exports.deleteAll = () => User.remove({}).exec();
 
 exports.signUp = (u = username, e = email, p = password) => {
+
     return request(app).post(usersSignUpUrl).send({username: u, email: e, password: p});
 };
 

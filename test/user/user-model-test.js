@@ -45,5 +45,5 @@ describe('User Model Test', () => {
             expect(err.errors.password).to.exist;
             done();
         });
-    })
+    });
 });

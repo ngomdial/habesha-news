@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const author = process.env.AUTHOR;
+const databaseUrl = process.env.DATABASE_URL;
 const version = process.env.VERSION;
 const baseUrl = process.env.BASE_URL + '/' + version;
 
@@ -18,7 +19,7 @@ const usersLoginUrl = usersUrl + '/login';
 const usersSignUpUrl = usersUrl + '/signup';
 
 exports.data = {
-    author, version, baseUrl,
+    author, databaseUrl, version, baseUrl,
 
     username, email, password,
     usersUrl, usersLoginUrl, usersSignUpUrl,

@@ -12,10 +12,17 @@ if (env === 'test') {
 mongoose.plugin(require('mongoose-hidden')({
     defaultHidden: {'_id': false, password: true, pin: true, '__v': true}
 }));
-mongoose
-    .connect(url, {useMongoClient: true})
-    .then(() => {
-        console.log('Database connected');
-        if (env === 'test') console.log(`Using test db: ${url}`);
-    })
-    .catch(err => console.error('Database connection failed', err));
+
+const connect = (databaseUrl = url) => {
+    return mongoose
+        .connect(databaseUrl, {useMongoClient: true})
+        .then(() => {
+            console.log('Database connected');
+            if (env === 'test') console.log(`Using test db: ${databaseUrl}`);
+        })
+        .catch(err => console.error('Database connection failed', err));
+};
+
+connect();
+
+module.exports = connect;

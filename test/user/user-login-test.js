@@ -109,6 +109,8 @@ describe('User Login Test', () => {
                 expect(body).to.have.property('user');
                 expect(body.user).to.have.property('username').equal(username);
                 expect(body.user).to.have.property('email').equal(email);
+                expect(body.user).to.have.property('profile');
+                expect(body.user.profile).to.have.property('user').equal(body.user._id);
             });
         });
 

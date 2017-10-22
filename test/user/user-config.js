@@ -13,7 +13,6 @@ const {username, email, password, usersUrl, usersSignUpUrl, usersLoginUrl} = dat
 exports.deleteAll = () => User.remove({}).exec();
 
 exports.signUp = (u = username, e = email, p = password) => {
-
     return request(app).post(usersSignUpUrl).send({username: u, email: e, password: p});
 };
 
@@ -21,10 +20,6 @@ exports.login = (u = username, p = password) => {
     return request(app).post(usersLoginUrl).send({username: u, password: p});
 };
 
-exports.findAll = () => {
-    return request(app).get(usersUrl);
-};
+exports.findAll = () => request(app).get(usersUrl);
 
-exports.findOne = id => {
-    return request(app).get(usersUrl + '/' + id);
-};
+exports.findOne = id => request(app).get(usersUrl + '/' + id);

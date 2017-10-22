@@ -5,6 +5,7 @@ const result = require('../../util/res');
 const helper = require('../../util/helper');
 
 const userDal = require('./user-dal');
+const profileDal = require('../profile/profile-dal');
 
 const validator = require('./user-validator');
 
@@ -42,7 +43,7 @@ exports.login = (req, res) => {
 };
 
 exports.signUp = (req, res) => {
-    let username, email, password;
+    let username, email, password, user;
     validator.hasSignUpFields(req)
         .then(body => {
             username = body.username;
@@ -70,7 +71,12 @@ exports.signUp = (req, res) => {
         })
         .then(salt => helper.hashPassword(password, salt))
         .then(hash => userDal.create({username, email, password: hash}))
-        .then(user => result.dataStatus(user, 201, res))
+        .then(saved => {
+            user = saved;
+            return profileDal.create({user: user._id});
+        })
+        .then(profile => userDal.update(user, {profile: profile}))
+        .then(() => result.dataStatus(user, 201, res))
         .catch(reject => result.errorReject(reject, res));
 };
 

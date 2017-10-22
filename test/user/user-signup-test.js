@@ -71,6 +71,8 @@ describe('User Sign-Up Test', () => {
             expect(body).to.be.a('object');
             expect(body).to.have.property('username').equal(username);
             expect(body).to.have.property('email').equal(email);
+            expect(body).to.have.property('profile');
+            expect(body.profile).to.have.property('user').equal(body._id);
         });
     });
 

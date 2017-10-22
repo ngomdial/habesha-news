@@ -3,8 +3,6 @@
 const expect = require('chai').expect;
 const mongoose = require('mongoose');
 
-const dal = require('../../app/user/user-dal');
-
 const userConfig = require('./user-config');
 const data = require('../../config/data');
 

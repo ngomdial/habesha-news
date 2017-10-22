@@ -18,11 +18,15 @@ const usersUrl = baseUrl + '/users';
 const usersLoginUrl = usersUrl + '/login';
 const usersSignUpUrl = usersUrl + '/signup';
 
+const profilesUrl = baseUrl + '/profiles';
+
 exports.data = {
     author, databaseUrl, version, baseUrl,
 
     username, email, password,
     usersUrl, usersLoginUrl, usersSignUpUrl,
 
-    categoryName, categoryColor
+    categoryName, categoryColor,
+
+    profilesUrl
 };

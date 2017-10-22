@@ -15,13 +15,7 @@ describe('User Login Test', () => {
         return userConfig.deleteAll();
     });
 
-    it('Should fail login if username is missing', done => {
-        userConfig.login('').end((err, res) => {
-            body = res.body;
-
-            expect(res.status).to.equal(400);
-            done();
-        });
+    it('Should fail login if username is missing', () => {
         return userConfig.login('').then(res => {
             body = res.body;
 

@@ -24,7 +24,7 @@ describe('Database Connection Test', () => {
     it('Should fail connection to DB with wrong URL', () => {
         sandbox.spy(console, 'error');
         process.env.DATABASE_URL = 'error_url';
-        return connection('mongodb://fake_domain/db_fake_database').catch(() => {
+        return connection('mongodb://localhosting/db_habesha_news').catch(() => {
             sinon.assert.called(console.error);
             sinon.assert.calledWithExactly(console.error, 'Database connection failed');
         });

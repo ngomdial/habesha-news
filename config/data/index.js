@@ -14,13 +14,15 @@ const password = 'awesomeness';
 const categoryName = 'politics';
 const categoryColor = '00AAFF';
 
+const commentMessage = 'This is a test message!';
+
 const usersUrl = baseUrl + '/users';
 const usersLoginUrl = usersUrl + '/login';
 const usersSignUpUrl = usersUrl + '/signup';
 
 const profilesUrl = baseUrl + '/profiles';
-
 const categoriesUrl = baseUrl + '/categories';
+const commentsUrl = baseUrl + '/comments';
 
 exports.data = {
     author, databaseUrl, version, baseUrl,
@@ -30,5 +32,6 @@ exports.data = {
 
     categoryName, categoryColor,
 
-    profilesUrl, categoriesUrl
+    commentMessage,
+    profilesUrl, categoriesUrl, commentsUrl
 };

@@ -35,18 +35,14 @@ be decomposed into a microservices architecture.
         - summary
         - status
         * category
-        * poster
-        * data
-        - created_at
-        - updated_at
-
-    ArticleData
-        - _id
-        * article
         * comments
         * followers
+        * poster
+        * data
         * warnings
         * voters
+        - created_at
+        - updated_at
 
     Category
         - _id

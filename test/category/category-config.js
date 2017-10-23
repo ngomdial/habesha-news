@@ -6,7 +6,6 @@ const app = require('../../index');
 const data = require('../../config/data');
 
 const Category = require('../../app/category/category-model');
-const dal = require('../../app/category/category-dal');
 
 const {categoriesUrl} = data.data;
 

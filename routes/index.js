@@ -18,5 +18,7 @@ router.get('/', (req, res) => {
 router.use('/users', require('../app/user/user-router'));
 router.use('/profiles', require('../app/profile/profile-router'));
 router.use('/categories', require('../app/category/category-router'));
+router.use('/comments', require('../app/comment/comment-router'));
+router.use('/articles', require('../app/article/article-router'));
 
 module.exports = router;

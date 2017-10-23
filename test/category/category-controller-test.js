@@ -104,11 +104,11 @@ describe('Category Controller Test', () => {
             return categoryConfig.findOne(new mongoose.mongo.ObjectId()).then(res => {
                 body = res.body;
 
-                expect(res.status).to.equal(400);
+                expect(res.status).to.equal(404);
                 expect(body).to.be.a('object');
                 expect(body).to.have.property('error').equal(true);
                 expect(body).to.have.property('message').contains('does not exist');
-                expect(body).to.have.property('status').equal(400);
+                expect(body).to.have.property('status').equal(404);
             })
         });
 

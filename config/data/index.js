@@ -15,6 +15,7 @@ const categoryName = 'politics';
 const categoryColor = '00AAFF';
 
 const commentMessage = 'This is a test message!';
+const warningMessage = 'The article has been posted before at http://article.com/29873.html';
 
 const usersUrl = baseUrl + '/users';
 const usersLoginUrl = usersUrl + '/login';
@@ -23,6 +24,8 @@ const usersSignUpUrl = usersUrl + '/signup';
 const profilesUrl = baseUrl + '/profiles';
 const categoriesUrl = baseUrl + '/categories';
 const commentsUrl = baseUrl + '/comments';
+
+const warningsUrl = baseUrl + '/warnings';
 
 exports.data = {
     author, databaseUrl, version, baseUrl,
@@ -33,5 +36,8 @@ exports.data = {
     categoryName, categoryColor,
 
     commentMessage,
-    profilesUrl, categoriesUrl, commentsUrl
+    profilesUrl, categoriesUrl, commentsUrl,
+
+    warningMessage,
+    warningsUrl
 };

@@ -38,7 +38,6 @@ be decomposed into a microservices architecture.
         * comments
         * followers
         * poster
-        * data
         * warnings
         * voters
         - created_at
@@ -54,6 +53,7 @@ be decomposed into a microservices architecture.
     Comment
         - _id
         - message
+        * article
         * poster
         * likes
         * dislikes

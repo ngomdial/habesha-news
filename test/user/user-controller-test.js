@@ -25,8 +25,6 @@ describe('User Controller Test', () => {
         });
     });
 
-
-
     describe('Retrieving Saved Users Test', () => {
         beforeEach(() => {
             return userConfig.deleteAll();

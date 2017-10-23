@@ -20,6 +20,8 @@ const usersSignUpUrl = usersUrl + '/signup';
 
 const profilesUrl = baseUrl + '/profiles';
 
+const categoriesUrl = baseUrl + '/categories';
+
 exports.data = {
     author, databaseUrl, version, baseUrl,
 
@@ -28,5 +30,5 @@ exports.data = {
 
     categoryName, categoryColor,
 
-    profilesUrl
+    profilesUrl, categoriesUrl
 };

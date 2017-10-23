@@ -2,7 +2,7 @@
 
 const result = require('../../util/res');
 
-const categoryDal = require('category-dal');
+const categoryDal = require('./category-dal');
 
 const validator = require('./category-validator');
 

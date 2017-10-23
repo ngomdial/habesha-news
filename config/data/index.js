@@ -17,6 +17,11 @@ const categoryColor = '00AAFF';
 const commentMessage = 'This is a test message!';
 const warningMessage = 'The article has been posted before at http://article.com/29873.html';
 
+const articleHeadline = 'New Flying Cars in Addis Abbaba';
+const sourceUrl = 'http://www.cool-buzz.com/articles/39878.html';
+const imageUrl = 'http://www.cool-buzz.com/images/39878-headline.png';
+const summary = 'A new innovative flying car has been launched in Addis Ababa to help with the congested traffic...';
+
 const usersUrl = baseUrl + '/users';
 const usersLoginUrl = usersUrl + '/login';
 const usersSignUpUrl = usersUrl + '/signup';
@@ -26,6 +31,8 @@ const categoriesUrl = baseUrl + '/categories';
 const commentsUrl = baseUrl + '/comments';
 
 const warningsUrl = baseUrl + '/warnings';
+
+const articlesUrl = baseUrl + '/articles';
 
 exports.data = {
     author, databaseUrl, version, baseUrl,
@@ -39,5 +46,8 @@ exports.data = {
     profilesUrl, categoriesUrl, commentsUrl,
 
     warningMessage,
-    warningsUrl
+    warningsUrl,
+
+    articleHeadline, sourceUrl, imageUrl, summary,
+    articlesUrl
 };

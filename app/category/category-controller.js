@@ -17,7 +17,7 @@ exports.create = (req, res) => {
         .then(found => {
             if (found) {
                 return Promise.reject(
-                    result.reject(`Category with ${name} already exists`)
+                    result.reject(`Category with name ${name} already exists`)
                 );
             } else {
                 return categoryDal.create({name, color});

@@ -49,6 +49,18 @@ describe('Category Controller Test', () => {
         });
     });
 
+    it('Should fail to create a category if it already exists', () => {
+        return categoryConfig.create({name: categoryName, color: categoryColor}).then(() =>
+            categoryConfig.create({name: categoryName, color: categoryColor})).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(400);
+            expect(body).to.have.property('error').equal(true);
+            expect(body).to.have.property('message').contains('already exists');
+            expect(body).to.have.property('status').equal(400);
+        });
+    });
+
     it('Should retrieve an empty list of categories', () => {
         return categoryConfig.findAll().then(res => {
             body = res.body;

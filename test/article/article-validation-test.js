@@ -89,8 +89,6 @@ describe('Article Validation Test', () => {
         return articleConfig.create(undefined, undefined, undefined, undefined, '').then(res => {
             body = res.body;
 
-            console.log(body);
-
             expect(res.status).to.equal(400);
             expect(body).to.be.a('object');
             expect(body).to.have.property('error').equal(true);
@@ -104,8 +102,6 @@ describe('Article Validation Test', () => {
     it('Should fail if category is missing', () => {
         return articleConfig.create(undefined, undefined, undefined, undefined, poster, '').then(res => {
             body = res.body;
-
-            console.log(body);
 
             expect(res.status).to.equal(400);
             expect(body).to.be.a('object');

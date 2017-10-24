@@ -27,3 +27,9 @@ exports.createArticle = (poster, category) => {
 exports.findAll = () => request(app).get(articlesUrl);
 
 exports.findOne = id => request(app).get(articlesUrl + '/' + id);
+
+exports.resetComments = id => {
+    return this.findOne(id).then(res => {
+
+        });
+};

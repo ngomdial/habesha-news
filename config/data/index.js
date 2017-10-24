@@ -14,7 +14,7 @@ const password = 'awesomeness';
 const categoryName = 'politics';
 const categoryColor = '00AAFF';
 
-const commentMessage = 'This is a test message!';
+const commentMessage = 'This article actually opened my eyes to a whole lot of things for the first time :)';
 const warningMessage = 'The article has been posted before at http://article.com/29873.html';
 
 const articleHeadline = 'New Flying Cars in Addis Abbaba';

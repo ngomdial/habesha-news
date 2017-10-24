@@ -11,7 +11,7 @@ const articleDal = require('../article/article-dal');
 const validator = require('./comment-validator');
 
 exports.create = (req, res) => {
-    let message, poster, article;
+    let message, poster, article, comment;
     validator.hasRequiredFields(req)
         .then(body => {
             message = body.message;
@@ -34,10 +34,16 @@ exports.create = (req, res) => {
                     result.rejectStatus(`Article with _id ${article} does not exist`, 404)
                 );
             } else {
-                return commentDal.create({message, poster, article});
+                article = found;
+                return commentDal.create({message, poster, article: article._id});
             }
         })
-        .then(comment => result.dataStatus(comment, 201, res))
+        .then(created => {
+            comment = created;
+            article.comments.push(comment._id);
+            return articleDal.update(article);
+        })
+        .then(() => result.dataStatus(comment, 201, res))
         .catch(reject => result.errorReject(reject, res));
 };
 

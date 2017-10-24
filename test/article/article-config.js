@@ -16,6 +16,14 @@ exports.create = (headline = articleHeadline, source_url = sourceUrl,
     return request(app).post(articlesUrl).send({headline, source_url, image_url, summary, poster, category});
 };
 
+exports.createArticle = (poster, category) => {
+    return request(app).post(articlesUrl).send({
+            headline: articleHeadline, source_url: sourceUrl,
+            image_url: imageUrl, summary:articleSummary, poster, category
+        }
+    );
+};
+
 exports.findAll = () => request(app).get(articlesUrl);
 
 exports.findOne = id => request(app).get(articlesUrl + '/' + id);

@@ -11,7 +11,7 @@ describe('Article Validation Test', () => {
 
     let body;
 
-    const {articlesUrl, articleHeadline, sourceUrl, imageUrl, summary} = data.data;
+    const {summary} = data.data;
     const poster = new mongoose.mongo.ObjectId();
     const category = new mongoose.mongo.ObjectId();
 

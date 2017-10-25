@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 
 const result = require('../../util/res');
+const helper = require('../../util/helper');
 
 const articleDal = require('./article-dal');
 const userDal = require('../user/user-dal');
@@ -44,6 +45,54 @@ exports.create = (req, res) => {
         })
         .then(article => result.dataStatus(article, 201, res))
         .catch(reject => result.errorReject(reject, res));
+};
+
+const applyFollowUnFollow = (req, res, follow = true) => {
+    let user, article = req.article;
+    validator.hasFollowUnFollowFields(req)
+        .then(body => {
+            user = body.user;
+            return userDal.findOne({_id: user});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${user} does not exist`, 404)
+                );
+            } else {
+                if (follow) {
+                    if (helper.containsId(user, article.followers)) {
+                        return Promise.reject(
+                            result.reject(`User with _id ${user} is already following this Article`)
+                        );
+                    } else {
+                        article.followers.push(user._id);
+                        return articleDal.update(article);
+                    }
+                } else {
+                    if (!helper.containsId(user, article.followers)) {
+                        return Promise.reject(
+                            result.reject(`User with _id ${user} is not following this Article`)
+                        );
+                    } else {
+                        article.followers.pull(user._id);
+                        return articleDal.update(article);
+                    }
+                }
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${user} is ${follow ? 'now' : 'no longer'} following this Article`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.follow = (req, res) => {
+    applyFollowUnFollow(req, res);
+};
+
+exports.unFollow = (req, res) => {
+    applyFollowUnFollow(req, res, false);
 };
 
 exports.validateOne = (req, res, next, id) => {

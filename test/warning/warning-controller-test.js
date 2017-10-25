@@ -124,7 +124,7 @@ describe('Warning Controller Test', () => {
             });
         });
 
-        it('Should add a warning but not not mark an article as failed if the warning count is still below the maximum', () => {
+        it('Should add a warning but not mark an article as failed if the warning count is still below the maximum', () => {
             return warningConfig.create(user._id, article._id)
                 .then(() => warningConfig.create(user._id, article._id))
                 .then(() => articleConfig.findOne(article._id)).then(res => {
@@ -134,7 +134,7 @@ describe('Warning Controller Test', () => {
                     expect(body).to.be.a('object');
                     expect(body).to.have.property('_id').to.equal(article._id);
                     expect(body).to.have.property('warnings').to.be.a('array');
-
+                    // expect(body.warnings).to.have.length.lessapprox TODO: Fix this statement
                 });
         });
 

@@ -33,6 +33,8 @@ const commentsUrl = baseUrl + '/comments';
 const warningsUrl = baseUrl + '/warnings';
 
 const articlesUrl = baseUrl + '/articles';
+const followArticleUrl = '/follow';
+const unFollowArticleUrl = '/unfollow';
 
 exports.data = {
     author, databaseUrl, version, baseUrl,
@@ -49,5 +51,5 @@ exports.data = {
     warningsUrl,
 
     articleHeadline, sourceUrl, imageUrl, articleSummary,
-    articlesUrl
+    articlesUrl, followArticleUrl, unFollowArticleUrl
 };

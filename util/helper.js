@@ -8,6 +8,17 @@ const result = require('./res');
 
 const WORK_FACTOR = process.env.SALT_WORK_FACTOR;
 
+exports.containsId = (obj, array) => {
+    const length = array.length;
+    if (length <= 0) return false;
+    for (let i = 0; i < length; i++) {
+        if (obj._id.equals(array[i])) {
+            return true;
+        }
+    }
+    return false;
+};
+
 exports.validateEmpty = (attr, message, reject, req) => {
     validate(attr, message, reject, req);
 };

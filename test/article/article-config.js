@@ -7,7 +7,7 @@ const data = require('../../config/data');
 
 const Article = require('../../app/article/article-model');
 
-const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary} = data.data;
+const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary, followArticleUrl, unFollowArticleUrl} = data.data;
 
 exports.deleteAll = () => Article.remove({}).exec();
 
@@ -24,12 +24,10 @@ exports.createArticle = (poster, category) => {
     );
 };
 
+exports.follow = (article, user) => {
+    return request(app).post(articlesUrl + '/' + article + followArticleUrl).send({user});
+};
+
 exports.findAll = () => request(app).get(articlesUrl);
 
 exports.findOne = id => request(app).get(articlesUrl + '/' + id);
-
-exports.resetComments = id => {
-    return this.findOne(id).then(res => {
-
-        });
-};

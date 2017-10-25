@@ -123,7 +123,7 @@ describe('Comment Controller Test', () => {
             });
         });
 
-        it('Should create a comment and add the poster to the article comments', () => {
+        it('Should create a comment and add it to the article comments', () => {
             return articleConfig.deleteAll().then(() => articleConfig.createArticle(user._id, category._id))
                 .then(res => {
                     article = res.body;

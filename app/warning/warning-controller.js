@@ -52,7 +52,7 @@ const addWarning = (message, poster, article) => {
     if (count >= constants.MAX_WARNING_COUNT) {
         return Promise.reject(
             result.reject(`Cannot add Warning as Article with _id ${article._id} has already reached the 
-                            maximum warning count of '${constant.MAX_WARNING_COUNT}' and is now '${status}'`
+                            maximum warning count of '${constants.MAX_WARNING_COUNT}' and is now '${status}'`
             )
         );
     } else {
@@ -64,7 +64,7 @@ const addWarning = (message, poster, article) => {
                 return articleDal.update(article);
             })
             .then(updated => {
-                if (count >= constant.MAX_WARNING_COUNT) {
+                if (count >= constants.MAX_WARNING_COUNT) {
                     updated.status = constants.statuses.failed;
                     return articleDal.update(updated);
                 } else {

@@ -10,6 +10,7 @@ const categoryConfig = require('../category/category-config');
 const warningConfig = require('./warning-config');
 
 const data = require('../../config/data');
+const constants = require('../../util/constants');
 
 describe('Warning Controller Test', () => {
 
@@ -76,7 +77,7 @@ describe('Warning Controller Test', () => {
             });
         });
 
-        it('Should create a warning if article and poster exist', () => {
+        it('Should create a warning if both article and poster exist', () => {
             return warningConfig.create(user._id, article._id).then(res => {
                 body = res.body;
 
@@ -98,7 +99,7 @@ describe('Warning Controller Test', () => {
             });
         });
 
-        it('Should create a warning and retrieve a single warning', () => {
+        it('Should create a warning and retrieve a single warning from the list of warnings', () => {
             return warningConfig.create(user._id, article._id).then(res => warningConfig.findOne(res.body._id)).then(res => {
                 body = res.body;
 
@@ -123,7 +124,37 @@ describe('Warning Controller Test', () => {
             });
         });
 
-        it('Should create a warning and add it to the article warnings', () => {
+        it('Should add a warning but not not mark an article as failed if the warning count is still below the maximum', () => {
+            return warningConfig.create(user._id, article._id)
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => articleConfig.findOne(article._id)).then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(200);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('_id').to.equal(article._id);
+                    expect(body).to.have.property('warnings').to.be.a('array');
+
+                });
+        });
+
+        it('Should mark an article as failed when the warning count reaches the maximum warning count', () => {
+            return warningConfig.create(user._id, article._id)
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => articleConfig.findOne(article._id)).then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(200);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('_id').equal(article._id);
+                    expect(body).to.have.property('warnings').to.be.a('array');
+                    expect(body.warnings).to.have.lengthOf(constants.MAX_WARNING_COUNT);
+                    expect(body).to.have.property('status').equal(constants.statuses.failed);
+                });
+        });
+
+        it('Should create a warning and add it to the article list of warnings', () => {
             return articleConfig.deleteAll().then(() => articleConfig.createArticle(user._id, category._id))
                 .then(res => {
                     article = res.body;
@@ -142,8 +173,25 @@ describe('Warning Controller Test', () => {
                     expect(body).to.be.a('object');
                     expect(body).to.have.property('_id').equal(article._id);
                     expect(body).to.have.property('warnings').to.be.a('array');
+                    expect(body).to.have.property('status').equal(constants.statuses.pending);
                     expect(body.warnings).to.have.lengthOf(1);
                     expect(body.warnings[0]).to.equal(warning._id);
+                });
+        });
+
+        it('Should fail if a user tries to post a warning on an article that has already failed', () => {
+            return warningConfig.create(user._id, article._id)
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('Cannot add Warning as Article with _id');
+                    expect(body).to.have.property('status').equal(400);
                 });
         });
     });

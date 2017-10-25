@@ -9,6 +9,7 @@ const articleConfig = require('./article-config');
 const profileConfig = require('../profile/profile-config');
 
 const data = require('../../config/data');
+const constants = require('../../util/constants');
 
 describe('Article Controller Test', () => {
 
@@ -87,7 +88,7 @@ describe('Article Controller Test', () => {
                 expect(body).to.have.property('source_url').equal(sourceUrl);
                 expect(body).to.have.property('image_url').equal(imageUrl);
                 expect(body).to.have.property('summary').equal(articleSummary);
-                expect(body).to.have.property('status').equal('pending');
+                expect(body).to.have.property('status').equal(constants.statuses.pending);
                 expect(body).to.have.property('poster').equal(user._id);
                 expect(body).to.have.property('category').equal(category._id);
                 expect(body).to.have.property('comments').to.have.lengthOf(0);
@@ -118,7 +119,7 @@ describe('Article Controller Test', () => {
                     expect(body).to.have.property('source_url').equal(sourceUrl);
                     expect(body).to.have.property('image_url').equal(imageUrl);
                     expect(body).to.have.property('summary').equal(articleSummary);
-                    expect(body).to.have.property('status').equal('pending');
+                    expect(body).to.have.property('status').equal(constants.statuses.pending);
                     expect(body).to.have.property('poster').equal(user._id);
                     expect(body).to.have.property('category').equal(category._id);
                     expect(body).to.have.property('comments').to.have.lengthOf(0);

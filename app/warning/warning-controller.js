@@ -38,18 +38,21 @@ exports.create = (req, res) => {
                 article = found;
                 return addWarning(message, poster, article);
             }
-        });
+        })
+        .then(warning => result.dataStatus(warning, 201, res))
+        .catch(reject => result.errorReject(reject, res));
 };
 
 const addWarning = (message, poster, article) => {
     let warning;
+
     let count = article.warnings.length;
     let status = article.status;
 
     if (count >= constants.MAX_WARNING_COUNT) {
         return Promise.reject(
             result.reject(`Cannot add Warning as Article with _id ${article._id} has already reached the 
-                            maximum warning count of '${constant.MAX_WARNING_COUNT}' and '${status}'`
+                            maximum warning count of '${constant.MAX_WARNING_COUNT}' and is now '${status}'`
             )
         );
     } else {
@@ -69,7 +72,7 @@ const addWarning = (message, poster, article) => {
                 }
             })
             .then(() => {
-                return Promise.resolve()
+                return Promise.resolve(warning);
             });
     }
 };

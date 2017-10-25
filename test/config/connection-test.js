@@ -17,7 +17,7 @@ describe('Database Connection Test', () => {
         sandbox.spy(console, 'log');
         return connection().then(() => {
             sinon.assert.called(console.log);
-            sinon.assert.calledWithExactly(console.log, 'Database connected');
+            sinon.assert.calledWithExactly(console.log, 'Database connect');
         });
     });
 

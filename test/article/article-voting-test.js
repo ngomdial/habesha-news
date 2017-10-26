@@ -156,14 +156,15 @@ describe('Article Voting Test', () => {
 
     it('Should auto-approve the article when the vote reaches the maximum', () => {
         let a, b, c, d;
-        return userConfig.signUp('a', 'a').then(res => { a = res.body; return userConfig.signUp('b', 'b'); })
+        return articleConfig.updateStatus(article._id, constants.statuses.pending).then(() => userConfig.signUp('a', 'a'))
+            .then(res => { a = res.body; return userConfig.signUp('b', 'b'); })
             .then(res => { b = res.body; return userConfig.signUp('c', 'c'); })
             .then(res => { c = res.body; return userConfig.signUp('d', 'd'); })
             .then(res => { d = res.body; return articleConfig.vote(article._id, a._id); })
             .then(() => articleConfig.vote(article._id, b._id))
             .then(() => articleConfig.vote(article._id, c._id))
-            .then(() => articleConfig.vote(article._id, d._id))
-            .then(() => articleConfig.vote(article._id, user._id))
+            .then(res => articleConfig.vote(article._id, d._id))
+            .then(res => articleConfig.vote(article._id, user._id))
             .then(() => articleConfig.findOne(article._id)).then(res => {
                 body = res.body;
 

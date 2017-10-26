@@ -92,7 +92,7 @@ describe('Article Voting Test', () => {
         });
     });
 
-    it('Should vote on an article and retrieve a list of non empty votes', () => {
+    it('Should vote on an article and retrieve a non empty list of voters', () => {
         return articleConfig.resetVoters(article._id).then(() => articleConfig.vote(article._id, user._id)).then(() =>
             articleConfig.findOne(article._id)).then(res => {
             body = res.body;

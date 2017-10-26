@@ -154,6 +154,22 @@ describe('Warning Controller Test', () => {
                 });
         });
 
+        it('Should fail to add a warning when the max count of warnings is reached', () => {
+            return warningConfig.create(user._id, article._id)
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(() => warningConfig.create(user._id, article._id))
+                .then(res => {
+                    body = res.body;
+
+                    expect(res.status).to.equal(400);
+                    expect(body).to.be.a('object');
+                    expect(body).to.have.property('error').equal(true);
+                    expect(body).to.have.property('message').contains('maximum warning count and failed');
+                    expect(body).to.have.property('status').equal(400);
+                });
+        });
+
         it('Should create a warning and add it to the article list of warnings', () => {
             return articleConfig.deleteAll().then(() => articleConfig.createArticle(user._id, category._id))
                 .then(res => {
@@ -190,7 +206,7 @@ describe('Warning Controller Test', () => {
                     expect(res.status).to.equal(400);
                     expect(body).to.be.a('object');
                     expect(body).to.have.property('error').equal(true);
-                    expect(body).to.have.property('message').contains('Cannot add Warning as Article with _id');
+                    expect(body).to.have.property('message').contains('maximum warning count and failed');
                     expect(body).to.have.property('status').equal(400);
                 });
         });

@@ -51,8 +51,7 @@ const addWarning = (message, poster, article) => {
 
     if (status === constants.statuses.failed) {
         return Promise.reject(
-            result.reject(`Cannot add Warning as Article with _id ${article._id} has already reached the 
-                            maximum warning count of '${constants.MAX_WARNING_COUNT}' and is now '${status}'`
+            result.reject(`Cannot add Warning as Article has already reached the maximum warning count and failed`
             )
         );
     }
@@ -63,32 +62,24 @@ const addWarning = (message, poster, article) => {
         );
     }
 
-    if (count >= constants.MAX_WARNING_COUNT) {
-        return Promise.reject(
-            result.reject(`Cannot add Warning as Article with _id ${article._id} has already reached the 
-                            maximum warning count of '${constants.MAX_WARNING_COUNT}' and is now '${status}'`
-            )
-        );
-    } else {
-        return warningDal.create({message, poster, article: article._id})
-            .then(created => {
-                warning = created;
-                article.warnings.push(warning._id);
-                count++;
-                return articleDal.update(article);
-            })
-            .then(updated => {
-                if (count >= constants.MAX_WARNING_COUNT) {
-                    updated.status = constants.statuses.failed;
-                    return articleDal.update(updated);
-                } else {
-                    return Promise.resolve(updated);
-                }
-            })
-            .then(() => {
-                return Promise.resolve(warning);
-            });
-    }
+    return warningDal.create({message, poster, article: article._id})
+        .then(created => {
+            warning = created;
+            article.warnings.push(warning._id);
+            count++;
+            return articleDal.update(article);
+        })
+        .then(updated => {
+            if (count >= constants.MAX_WARNING_COUNT) {
+                updated.status = constants.statuses.failed;
+                return articleDal.update(updated);
+            } else {
+                return Promise.resolve(updated);
+            }
+        })
+        .then(() => {
+            return Promise.resolve(warning);
+        });
 };
 
 exports.validateOne = (req, res, next, id) => {

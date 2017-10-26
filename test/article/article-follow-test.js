@@ -148,14 +148,16 @@ describe('Article Following Test', () => {
     });
 
     it('Should reset the list of followers', () => {
-        return articleConfig.follow(article._id, user._id).then(() => articleConfig.resetFollowers(article._id)).then(res => {
-            body = res.body;
+        return articleConfig.follow(article._id, user._id).then(() => articleConfig.resetFollowers(article._id)).then(updated => {
+            body = updated;
 
-            expect(res.status).to.equal(200);
             expect(body).to.be.a('object');
             expect(body).to.have.property('followers');
             expect(body.followers).to.be.a('array');
             expect(body.followers).to.have.lengthOf(0);
         });
     });
+
+    // TODO: Should not follow article that is already failed
+    // TODO: Should not follow article that is pending
 });

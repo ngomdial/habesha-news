@@ -194,5 +194,19 @@ describe('Warning Controller Test', () => {
                     expect(body).to.have.property('status').equal(400);
                 });
         });
+
+        it('Should fail if a user tries to post a warning on an article that is approved', () => {
+            return articleConfig.updateStatus(article._id, constants.statuses.approved).then(() =>
+                warningConfig.create(user._id, article._id)).then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(400);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('error').equal(true);
+                expect(body).to.have.property('message').contains('Cannot add Warning as Article with _id');
+                expect(body).to.have.property('message').contains('already approved');
+                expect(body).to.have.property('status').equal(400);
+            });
+        });
     });
 });

@@ -34,6 +34,7 @@ const warningsUrl = baseUrl + '/warnings';
 
 const articlesUrl = baseUrl + '/articles';
 const followersUrl = '/followers';
+const votersUrls = '/voters';
 
 exports.data = {
     author, databaseUrl, version, baseUrl,
@@ -50,5 +51,5 @@ exports.data = {
     warningsUrl,
 
     articleHeadline, sourceUrl, imageUrl, articleSummary,
-    articlesUrl, followersUrl
+    articlesUrl, followersUrl, votersUrls
 };

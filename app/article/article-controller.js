@@ -4,6 +4,7 @@ const Promise = require('bluebird');
 
 const result = require('../../util/res');
 const helper = require('../../util/helper');
+const constants = require('../../util/constants');
 
 const articleDal = require('./article-dal');
 const userDal = require('../user/user-dal');
@@ -47,6 +48,98 @@ exports.create = (req, res) => {
         .catch(reject => result.errorReject(reject, res));
 };
 
+exports.findVoters = (req, res) => {
+    let article = req.article;
+    result.data(article.voters, res);
+};
+
+exports.vote = (req, res) => {
+    applyVoteUnVote(req, res);
+};
+
+exports.unVote = (req, res) => {
+    applyVoteUnVote(req, res, false);
+};
+
+const applyVoteUnVote = (req, res, vote = true) => {
+    let user, article = req.article;
+    let votes = article.voters.length;
+    validator.hasVoteUnVoteFields(req)
+        .then(body => {
+            user = body.user;
+            return userDal.findOne({_id: user});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${user} does not exist`, 404)
+                );
+            } else {
+                user = found;
+                if (article.status === constants.statuses.failed) {
+                    return Promise.reject(
+                        result.reject(
+                            `Cannot vote on this article as it has already failed`
+                        )
+                    );
+                }
+                if (article.status === constants.statuses.approved) {
+                    return Promise.reject(
+                        result.reject(
+                            `Cannot vote on this article as it has already been approved`
+                        )
+                    );
+                }
+                if (vote) {
+                    if (helper.containsId(user, article.voters)) {
+                        return Promise.reject(
+                            result.reject(`User with _id ${user._id} has already voted on this Article`)
+                        );
+                    } else {
+                        article.voters.push(user._id);
+                        votes++;
+                        return articleDal.update(article);
+                    }
+                } else {
+                    if (!helper.containsId(user, article.voters)) {
+                        return Promise.reject(
+                            result.reject(`User with _id ${user._id} has not voted on this Article`)
+                        );
+                    } else {
+                        article.voters.pull(user._id);
+                        votes--;
+                        return articleDal.update(article);
+                    }
+                }
+            }
+        })
+        .then(() => {
+            if (votes >= constants.MAX_APPROVAL_COUNT) {
+                article.status = constants.statuses.approved;
+                return articleDal.update(article);
+            } else {
+                return Promise.resolve();
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${user._id} has ${vote ? 'voted' : 'unvoted'} on this Article`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.findFollowers = (req, res) => {
+    let article = req.article;
+    result.data(article.followers, res);
+};
+
+exports.follow = (req, res) => {
+    applyFollowUnFollow(req, res);
+};
+
+exports.unFollow = (req, res) => {
+    applyFollowUnFollow(req, res, false);
+};
+
 const applyFollowUnFollow = (req, res, follow = true) => {
     let user, article = req.article;
     validator.hasFollowUnFollowFields(req)
@@ -61,6 +154,20 @@ const applyFollowUnFollow = (req, res, follow = true) => {
                 );
             } else {
                 user = found;
+                if (article.status === constants.statuses.failed) {
+                    return Promise.reject(
+                        result.reject(
+                            `Cannot ${follow ? 'follow' : 'unfollow'} this article as it has failed`
+                        )
+                    );
+                }
+                if (article.status === constants.statuses.pending) {
+                    return Promise.reject(
+                        result.reject(
+                            `Cannot ${follow ? 'follow' : 'unfollow'} this article as it is pending`
+                        )
+                    );
+                }
                 if (follow) {
                     if (helper.containsId(user, article.followers)) {
                         return Promise.reject(
@@ -86,29 +193,6 @@ const applyFollowUnFollow = (req, res, follow = true) => {
             result.messageStatus(`User with _id ${user._id} is ${follow ? 'now' : 'no longer'} following this Article`, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
-};
-
-exports.findFollowers = (req, res) => {
-    let article = req.article;
-    result.data(article.followers, res);
-};
-
-exports.follow = (req, res) => {
-    applyFollowUnFollow(req, res);
-};
-
-exports.unFollow = (req, res) => {
-    applyFollowUnFollow(req, res, false);
-};
-
-// For running tests only!!
-exports.resetFollowers = (req, res) => {
-    const article = req.article;
-    article.followers = [];
-    articleDal.update(article)
-        .then(updated => {
-            result.data(updated, res);
-        });
 };
 
 exports.validateOne = (req, res, next, id) => {

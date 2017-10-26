@@ -107,4 +107,8 @@ describe('Article UnFollowing Test', () => {
             expect(body).to.have.property('status').equal(400);
         });
     });
+
+    // TODO: Should not unfollow article that is already failed
+    // TODO: Should not unfollow article that is pending
+
 });

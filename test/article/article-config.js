@@ -6,8 +6,9 @@ const app = require('../../index');
 const data = require('../../config/data');
 
 const Article = require('../../app/article/article-model');
+const articleDal = require('../../app/article/article-dal');
 
-const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary, followersUrl} = data.data;
+const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary, followersUrl, votersUrls} = data.data;
 
 exports.deleteAll = () => Article.remove({}).exec();
 
@@ -24,11 +25,21 @@ exports.createArticle = (poster, category) => {
     );
 };
 
-exports.resetFollowers = id => {
-    return request(app).delete(articlesUrl + '/' + id + '/reset');
+exports.updateStatus = (id, status) => {
+    return articleDal.findOne({_id: id}).then(article => {
+        article.status = status;
+        return articleDal.update(article);
+    });
 };
 
-exports.findFollowers = (article) => {
+exports.resetFollowers = id => {
+    return articleDal.findOne({_id: id}).then(article => {
+        article.followers = [];
+        return articleDal.update(article);
+    });
+};
+
+exports.findFollowers = article => {
     return request(app).get(articlesUrl + '/' + article + followersUrl);
 };
 
@@ -38,6 +49,25 @@ exports.follow = (article, user) => {
 
 exports.unFollow = (article, user) => {
     return request(app).delete(articlesUrl + '/' + article + followersUrl).send({user});
+};
+
+exports.findVoters = article => {
+    return request(app).get(articlesUrl + '/' + article + votersUrls);
+};
+
+exports.resetVoters = id => {
+    return articleDal.findOne({_id: id}).then(article => {
+        article.voters = [];
+        return articleDal.update(article);
+    });
+};
+
+exports.vote = (article, user) => {
+    return request(app).post(articlesUrl + '/' + article + votersUrls).send({user});
+};
+
+exports.unVote = (article, user) => {
+    return request(app).delete(articlesUrl + '/' + article + votersUrls).send({user});
 };
 
 exports.findAll = () => request(app).get(articlesUrl);

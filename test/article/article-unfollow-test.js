@@ -9,6 +9,7 @@ const articleConfig = require('./article-config');
 const profileConfig = require('../profile/profile-config');
 
 const data = require('../../config/data');
+const constants = require('../../util/constants');
 
 describe('Article UnFollowing Test', () => {
 
@@ -33,6 +34,9 @@ describe('Article UnFollowing Test', () => {
                 return articleConfig.follow(article._id, user._id);
             });
     });
+
+    beforeEach(() => articleConfig.updateStatus(article._id, constants.statuses.approved));
+
 
     it('Should fail to unfollow if the user is not provided', () => {
         return articleConfig.unFollow(article._id, '').then(res => {
@@ -70,6 +74,32 @@ describe('Article UnFollowing Test', () => {
         });
     });
 
+    it('Should fail to unfollow if the article has failed', () => {
+        return articleConfig.updateStatus(article._id, constants.statuses.failed)
+            .then(() => articleConfig.unFollow(article._id, user._id)).then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(400);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('error').equal(true);
+                expect(body).to.have.property('message').contains('article as it has failed');
+                expect(body).to.have.property('status').equal(400);
+            });
+    });
+
+    it('Should fail to unfollow if the article is pending', () => {
+        return articleConfig.updateStatus(article._id, constants.statuses.pending)
+            .then(() => articleConfig.unFollow(article._id, user._id)).then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(400);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('error').equal(true);
+                expect(body).to.have.property('message').contains('as it is pending');
+                expect(body).to.have.property('status').equal(400);
+            });
+    });
+
     it('Should unfollow a valid article with a valid user', () => {
         return articleConfig.follow(article._id, user._id).then(() => articleConfig.unFollow(article._id, user._id)).then(res => {
             body = res.body;
@@ -88,11 +118,11 @@ describe('Article UnFollowing Test', () => {
             expect(res.body.followers[0]).to.equal(user._id);
             return articleConfig.unFollow(article._id, user._id).then(() => articleConfig.findOne(article._id));
         })
-        .then(res => {
-            body = res.body;
-            expect(res.status).to.equal(200);
-            expect(body.followers).to.have.lengthOf(0);
-        });
+            .then(res => {
+                body = res.body;
+                expect(res.status).to.equal(200);
+                expect(body.followers).to.have.lengthOf(0);
+            });
     });
 
     it('Should fail to unfollow an article if user is not following it', () => {
@@ -107,8 +137,4 @@ describe('Article UnFollowing Test', () => {
             expect(body).to.have.property('status').equal(400);
         });
     });
-
-    // TODO: Should not unfollow article that is already failed
-    // TODO: Should not unfollow article that is pending
-
 });

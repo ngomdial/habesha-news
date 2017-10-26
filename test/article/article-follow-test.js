@@ -9,6 +9,7 @@ const articleConfig = require('./article-config');
 const profileConfig = require('../profile/profile-config');
 
 const data = require('../../config/data');
+const constants = require('../../util/constants');
 
 describe('Article Following Test', () => {
 
@@ -32,6 +33,8 @@ describe('Article Following Test', () => {
                 article = res.body;
             });
     });
+
+    beforeEach(() => articleConfig.updateStatus(article._id, constants.statuses.approved));
 
     it('Should have an empty list of followers on a new article', () => {
         return articleConfig.findOne(article._id).then(res => {
@@ -91,7 +94,33 @@ describe('Article Following Test', () => {
         });
     });
 
-    it('Should follow a valid article with a valid user', () => {
+    it('Should fail to follow an article that is pending', () => {
+        return articleConfig.updateStatus(article._id, constants.statuses.pending).then(() =>
+            articleConfig.follow(article._id, user._id)).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(400);
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('error').equal(true);
+            expect(body).to.have.property('message').contains('this article as it is pending');
+            expect(body).to.have.property('status').equal(400);
+        });
+    });
+
+    it('Should fail to follow an article that has failed', () => {
+        return articleConfig.updateStatus(article._id, constants.statuses.failed)
+            .then(() => articleConfig.follow(article._id, user._id)).then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(400);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('error').equal(true);
+                expect(body).to.have.property('message').contains('this article as it has failed');
+                expect(body).to.have.property('status').equal(400);
+            });
+    });
+
+    it('Should follow a valid approved article with a valid user', () => {
         return articleConfig.follow(article._id, user._id).then(res => {
             body = res.body;
 
@@ -104,15 +133,15 @@ describe('Article Following Test', () => {
     });
 
     it('Should retrieve a valid list of followers on an article', () => {
-        return articleConfig.resetFollowers(article._id).then(() => articleConfig.follow(article._id, user._id)).then(() =>
-            articleConfig.findFollowers(article._id)).then(res => {
-            body = res.body;
+        return articleConfig.resetFollowers(article._id).then(() => articleConfig.follow(article._id, user._id))
+            .then(() => articleConfig.findFollowers(article._id)).then(res => {
+                body = res.body;
 
-            expect(res.status).to.equal(200);
-            expect(body).to.be.a('array');
-            expect(body).to.have.lengthOf(1);
-            expect(body[0]).to.equal(user._id);
-        });
+                expect(res.status).to.equal(200);
+                expect(body).to.be.a('array');
+                expect(body).to.have.lengthOf(1);
+                expect(body[0]).to.equal(user._id);
+            });
     });
 
     it('Should follow an article and add the follower to the list of followers', () => {
@@ -157,7 +186,4 @@ describe('Article Following Test', () => {
             expect(body.followers).to.have.lengthOf(0);
         });
     });
-
-    // TODO: Should not follow article that is already failed
-    // TODO: Should not follow article that is pending
 });

@@ -32,6 +32,10 @@ exports.follow = (article, user) => {
     return request(app).post(articlesUrl + '/' + article + followArticleUrl).send({user});
 };
 
+exports.unFollow = (article, user) => {
+    return request(app).post(articlesUrl + '/' + article + unFollowArticleUrl).send({user});
+};
+
 exports.findAll = () => request(app).get(articlesUrl);
 
 exports.findOne = id => request(app).get(articlesUrl + '/' + id);

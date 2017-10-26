@@ -124,4 +124,16 @@ describe('Article Following Test', () => {
             expect(body).to.have.property('status').equal(400);
         });
     });
+
+    it('Should reset the list of followers', () => {
+        return articleConfig.follow(article._id, user._id).then(() => articleConfig.resetFollowers(article._id)).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(200);
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('followers');
+            expect(body.followers).to.be.a('array');
+            expect(body.followers).to.have.lengthOf(0);
+        });
+    });
 });

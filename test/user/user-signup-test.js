@@ -76,7 +76,7 @@ describe('User Sign-Up Test', () => {
         });
     });
 
-    it('Should fail registration if username is already taken', () => {
+    it('Should fail signup if username is already taken', () => {
         return userConfig.signUp().then(() => userConfig.signUp()).then(res => {
             body = res.body;
 
@@ -88,7 +88,7 @@ describe('User Sign-Up Test', () => {
         });
     });
 
-    it('Should fail registration if email is already taken', () => {
+    it('Should fail signup if email is already taken', () => {
         return userConfig.signUp().then(() => userConfig.signUp('someone_else')).then(res => {
             body = res.body;
 

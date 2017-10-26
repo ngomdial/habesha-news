@@ -52,7 +52,9 @@ describe('User Login Test', () => {
     });
 
     describe('User Login With Wrong Credentials Test', () => {
+
         let user;
+
         beforeEach(() => {
             return userConfig.deleteAll()
                 .then(() => userConfig.signUp())
@@ -66,7 +68,6 @@ describe('User Login Test', () => {
             return userConfig.login('helloworld').then(res => {
                 body = res.body;
 
-
                 expect(res.status).to.equal(400);
                 expect(body).to.be.a('object');
                 expect(body).to.have.property('error').equal(true);
@@ -76,7 +77,7 @@ describe('User Login Test', () => {
         });
 
         it('Should fail login if password does not exist', () => {
-            return userConfig.login(undefined, 'some_weird_passwordz').then(res => {
+            return userConfig.login(undefined, 'some_weird_password').then(res => {
                 body = res.body;
 
                 expect(res.status).to.equal(400);
@@ -88,7 +89,7 @@ describe('User Login Test', () => {
         });
 
         it('Should fail login if username and password do not exist', () => {
-            return userConfig.login('some_username_unwanted', 'some_weird_passwordz').then(res => {
+            return userConfig.login('some_username_unwanted', 'some_weird_password').then(res => {
                 body = res.body;
 
                 expect(res.status).to.equal(400);

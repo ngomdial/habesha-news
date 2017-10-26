@@ -24,6 +24,10 @@ exports.createArticle = (poster, category) => {
     );
 };
 
+exports.resetFollowers = id => {
+    return request(app).delete(articlesUrl + '/' + id + '/reset');
+};
+
 exports.follow = (article, user) => {
     return request(app).post(articlesUrl + '/' + article + followArticleUrl).send({user});
 };

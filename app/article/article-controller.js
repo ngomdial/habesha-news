@@ -60,10 +60,11 @@ const applyFollowUnFollow = (req, res, follow = true) => {
                     result.rejectStatus(`User with _id ${user} does not exist`, 404)
                 );
             } else {
+                user = found;
                 if (follow) {
                     if (helper.containsId(user, article.followers)) {
                         return Promise.reject(
-                            result.reject(`User with _id ${user} is already following this Article`)
+                            result.reject(`User with _id ${user._id} is already following this Article`)
                         );
                     } else {
                         article.followers.push(user._id);
@@ -72,7 +73,7 @@ const applyFollowUnFollow = (req, res, follow = true) => {
                 } else {
                     if (!helper.containsId(user, article.followers)) {
                         return Promise.reject(
-                            result.reject(`User with _id ${user} is not following this Article`)
+                            result.reject(`User with _id ${user._id} is not following this Article`)
                         );
                     } else {
                         article.followers.pull(user._id);
@@ -82,7 +83,7 @@ const applyFollowUnFollow = (req, res, follow = true) => {
             }
         })
         .then(() => {
-            result.messageStatus(`User with _id ${user} is ${follow ? 'now' : 'no longer'} following this Article`, 201, res);
+            result.messageStatus(`User with _id ${user._id} is ${follow ? 'now' : 'no longer'} following this Article`, 201, res);
         })
         .catch(reject => result.errorReject(reject, res));
 };
@@ -93,6 +94,17 @@ exports.follow = (req, res) => {
 
 exports.unFollow = (req, res) => {
     applyFollowUnFollow(req, res, false);
+};
+
+// For running tests only!!
+exports.resetFollowers = (req, res) => {
+    const article = req.article;
+    article.followers = [];
+    articleDal.update(article)
+        .then(updated => {
+            result.data(updated, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
 };
 
 exports.validateOne = (req, res, next, id) => {

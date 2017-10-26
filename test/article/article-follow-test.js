@@ -33,6 +33,18 @@ describe('Article Following Test', () => {
             });
     });
 
+    it('Should have empty list of followers on a new article', () => {
+        return articleConfig.findOne(article._id).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(200);
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('followers');
+            expect(body.followers).to.be.a('array');
+            expect(body.followers).to.have.lengthOf(0);
+        });
+    });
+
     it('Should fail to follow if the user is not provided', () => {
         return articleConfig.follow(article._id, '').then(res => {
             body = res.body;
@@ -81,7 +93,35 @@ describe('Article Following Test', () => {
         });
     });
 
-    // Should follow an article and add user to the list of followers
+    it('Should follow an article and add the follower to the list of followers', () => {
+        return articleConfig.resetFollowers(article._id).then(() => articleConfig.follow(article._id, user._id)).then(res => {
+            body = res.body;
 
-    // Should fail to follow article if user is already following it
+            expect(res.status).to.equal(201);
+            return articleConfig.findOne(article._id);
+        })
+            .then(res => {
+                body = res.body;
+
+                expect(res.status).to.equal(200);
+                expect(body).to.be.a('object');
+                expect(body).to.have.property('followers');
+                expect(body.followers).to.be.a('array');
+                expect(body.followers).to.have.lengthOf(1);
+                expect(body.followers[0]).to.equal(user._id);
+            });
+    });
+
+    it('Should fail to follow an article if user is already following it', () => {
+        return articleConfig.resetFollowers(article._id).then(() => articleConfig.follow(article._id, user._id)).then(() =>
+            articleConfig.follow(article._id, user._id)).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(400);
+            expect(body).to.be.a('object');
+            expect(body).to.have.property('error').equal(true);
+            expect(body).to.have.property('message').contains('is already following this Article');
+            expect(body).to.have.property('status').equal(400);
+        });
+    });
 });

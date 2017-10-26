@@ -33,7 +33,7 @@ describe('Article Following Test', () => {
             });
     });
 
-    it('Should have empty list of followers on a new article', () => {
+    it('Should have an empty list of followers on a new article', () => {
         return articleConfig.findOne(article._id).then(res => {
             body = res.body;
 
@@ -42,6 +42,16 @@ describe('Article Following Test', () => {
             expect(body).to.have.property('followers');
             expect(body.followers).to.be.a('array');
             expect(body.followers).to.have.lengthOf(0);
+        });
+    });
+
+    it('Should retrieve an empty list of followers on a new article', () => {
+        return articleConfig.findFollowers(article._id).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(200);
+            expect(body).to.be.a('array');
+            expect(body).to.have.lengthOf(0);
         });
     });
 
@@ -90,6 +100,18 @@ describe('Article Following Test', () => {
             expect(body).to.have.property('error').equal(false);
             expect(body).to.have.property('message').contains('is now following this Article');
             expect(body).to.have.property('status').equal(201);
+        });
+    });
+
+    it('Should retrieve a valid list of followers on an article', () => {
+        return articleConfig.resetFollowers(article._id).then(() => articleConfig.follow(article._id, user._id)).then(() =>
+            articleConfig.findFollowers(article._id)).then(res => {
+            body = res.body;
+
+            expect(res.status).to.equal(200);
+            expect(body).to.be.a('array');
+            expect(body).to.have.lengthOf(1);
+            expect(body[0]).to.equal(user._id);
         });
     });
 

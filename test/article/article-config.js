@@ -28,6 +28,10 @@ exports.resetFollowers = id => {
     return request(app).delete(articlesUrl + '/' + id + '/reset');
 };
 
+exports.findFollowers = (article) => {
+    return request(app).get(articlesUrl + '/' + article + followersUrl);
+};
+
 exports.follow = (article, user) => {
     return request(app).post(articlesUrl + '/' + article + followersUrl).send({user});
 };

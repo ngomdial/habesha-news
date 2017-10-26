@@ -88,6 +88,11 @@ const applyFollowUnFollow = (req, res, follow = true) => {
         .catch(reject => result.errorReject(reject, res));
 };
 
+exports.findFollowers = (req, res) => {
+    let article = req.article;
+    result.data(article.followers, res);
+};
+
 exports.follow = (req, res) => {
     applyFollowUnFollow(req, res);
 };
@@ -103,8 +108,7 @@ exports.resetFollowers = (req, res) => {
     articleDal.update(article)
         .then(updated => {
             result.data(updated, res);
-        })
-        .catch(reject => result.errorReject(reject, res));
+        });
 };
 
 exports.validateOne = (req, res, next, id) => {

@@ -7,7 +7,7 @@ const data = require('../../config/data');
 
 const Article = require('../../app/article/article-model');
 
-const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary, followArticleUrl, unFollowArticleUrl} = data.data;
+const {articlesUrl, articleHeadline, sourceUrl, imageUrl, articleSummary, followersUrl} = data.data;
 
 exports.deleteAll = () => Article.remove({}).exec();
 
@@ -29,11 +29,11 @@ exports.resetFollowers = id => {
 };
 
 exports.follow = (article, user) => {
-    return request(app).post(articlesUrl + '/' + article + followArticleUrl).send({user});
+    return request(app).post(articlesUrl + '/' + article + followersUrl).send({user});
 };
 
 exports.unFollow = (article, user) => {
-    return request(app).post(articlesUrl + '/' + article + unFollowArticleUrl).send({user});
+    return request(app).delete(articlesUrl + '/' + article + followersUrl).send({user});
 };
 
 exports.findAll = () => request(app).get(articlesUrl);

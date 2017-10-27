@@ -29,6 +29,8 @@ const usersSignUpUrl = usersUrl + '/signup';
 const profilesUrl = baseUrl + '/profiles';
 const categoriesUrl = baseUrl + '/categories';
 const commentsUrl = baseUrl + '/comments';
+const likesCommentUrl = '/likes';
+const dislikesCommentUrl = '/dislikes';
 
 const warningsUrl = baseUrl + '/warnings';
 
@@ -45,7 +47,7 @@ exports.data = {
     categoryName, categoryColor,
 
     commentMessage,
-    profilesUrl, categoriesUrl, commentsUrl,
+    profilesUrl, categoriesUrl, commentsUrl, likesCommentUrl, dislikesCommentUrl,
 
     warningMessage,
     warningsUrl,

@@ -14,3 +14,11 @@ exports.hasRequiredFields = req => {
         resolve(req.body);
     });
 };
+
+exports.hasLikeDislikeFields = req => {
+    return new Promise((resolve, reject) => {
+        helper.validateEmptyOnly('user', `No 'user' provided`, reject, req);
+
+        resolve(req.body);
+    });
+};

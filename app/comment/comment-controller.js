@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 
 const result = require('../../util/res');
+const helper = require('../../util/helper');
 
 const commentDal = require('./comment-dal');
 const userDal = require('../user/user-dal');
@@ -57,6 +58,47 @@ exports.validateOne = (req, res, next, id) => {
                 next();
             }
         });
+};
+
+exports.like = (req, res) => {
+    let user, comment = req.comment, added;
+    validator.hasLikeDislikeFields(req)
+        .then(body => {
+            user = body.user;
+            return userDal.findOne({_id: user});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${user} does not exist`, 404)
+                );
+            } else {
+                user = found;
+                if (user._id.equals(comment.poster)) {
+                    return Promise.reject(
+                        result.rejectStatus(`User with _id ${user._id} cannot like their own comment!`, 400)
+                    );
+                } else {
+                    if (helper.containsId(user, comment.likes)) {
+                        comment.likes.pull(user._id);
+                        added = false;
+                    } else {
+                        comment.likes.push(user._id);
+                        added = true;
+                    }
+                    return commentDal.update(comment);
+                }
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${user._id} has ${added ? 'added' : 'removed'} a like on this Comment`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.findLikes = (req, res) => {
+    let comment = req.comment;
+    result.data(comment.likes, res);
 };
 
 exports.findOne = (req, res) => {

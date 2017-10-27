@@ -162,6 +162,40 @@ describe('Comment Liking Test', () => {
                 expect(body).to.have.lengthOf(0);
             });
     });
-});
 
-// TODO: Should like a comment and automatically remove it from the likes
+
+    it('Should remove a dislike from the dislikes and add it to the likes upon liking a comment', () => {
+        return commentConfig.resetLikes(comment._id).then(() => commentConfig.resetDislikes(comment._id)).then(() =>
+            commentConfig.dislike(comment._id, otherUser._id)).then(res => {
+            expect(res.status).to.equal(201);
+            return commentConfig.findOne(comment._id);
+        })
+        .then(res => {
+            body = res.body;
+
+            expect(body).to.have.property('likes');
+            expect(body.likes).to.be.a('array');
+            expect(body.likes).to.have.lengthOf(0);
+            expect(body).to.have.property('dislikes');
+            expect(body.dislikes).to.be.a('array');
+            expect(body.dislikes).to.have.lengthOf(1);
+            expect(body.dislikes[0]).to.equal(otherUser._id);
+            return commentConfig.like(comment._id, otherUser._id);
+        })
+        .then(res => {
+            expect(res.status).to.equal(201);
+            return commentConfig.findOne(comment._id);
+        })
+        .then(res => {
+            body = res.body;
+
+            expect(body).to.have.property('likes');
+            expect(body.likes).to.be.a('array');
+            expect(body.likes).to.have.lengthOf(1);
+            expect(body.likes[0]).to.equal(otherUser._id);
+            expect(body).to.have.property('dislikes');
+            expect(body.dislikes).to.be.a('array');
+            expect(body.dislikes).to.have.lengthOf(0);
+        });
+    });
+});

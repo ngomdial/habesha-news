@@ -25,8 +25,20 @@ exports.resetLikes = comment => {
         });
 };
 
+exports.resetDislikes = comment => {
+    return commentDal.findOne({_id: comment})
+        .then(found => {
+            found.dislikes = [];
+            return commentDal.update(found);
+        });
+};
+
 exports.findLikes = comment => {
     return request(app).get(commentsUrl + '/' + comment + likesCommentUrl);
+};
+
+exports.findDislikes = comment => {
+    return request(app).get(commentsUrl + '/' + comment + dislikesCommentUrl);
 };
 
 exports.like = (comment, user) => {

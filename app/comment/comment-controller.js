@@ -84,6 +84,7 @@ exports.like = (req, res) => {
                         added = false;
                     } else {
                         comment.likes.push(user._id);
+                        comment.dislikes.pull(user._id);
                         added = true;
                     }
                     return commentDal.update(comment);
@@ -99,6 +100,48 @@ exports.like = (req, res) => {
 exports.findLikes = (req, res) => {
     let comment = req.comment;
     result.data(comment.likes, res);
+};
+
+exports.dislike = (req, res) => {
+    let user, comment = req.comment, added;
+    validator.hasLikeDislikeFields(req)
+        .then(body => {
+            user = body.user;
+            return userDal.findOne({_id: user});
+        })
+        .then(found => {
+            if (!found) {
+                return Promise.reject(
+                    result.rejectStatus(`User with _id ${user} does not exist`, 404)
+                );
+            } else {
+                user = found;
+                if (user._id.equals(comment.poster)) {
+                    return Promise.reject(
+                        result.rejectStatus(`User with _id ${user._id} cannot dislike their own comment!`, 400)
+                    );
+                } else {
+                    if (helper.containsId(user, comment.dislikes)) {
+                        comment.dislikes.pull(user._id);
+                        added = false;
+                    } else {
+                        comment.dislikes.push(user._id);
+                        comment.likes.pull(user._id);
+                        added = true;
+                    }
+                    return commentDal.update(comment);
+                }
+            }
+        })
+        .then(() => {
+            result.messageStatus(`User with _id ${user._id} has ${added ? 'added' : 'removed'} a dislike on this Comment`, 201, res);
+        })
+        .catch(reject => result.errorReject(reject, res));
+};
+
+exports.findDislikes = (req, res) => {
+    let comment = req.comment;
+    result.data(comment.dislikes, res);
 };
 
 exports.findOne = (req, res) => {

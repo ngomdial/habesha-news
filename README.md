@@ -14,6 +14,14 @@ be decomposed into a microservices architecture.
         - email
         - password
         * profile
+        * devices
+        - created_at
+        - updated_at
+
+    Device
+        - _id
+        - token
+        * user
         - created_at
         - updated_at
 
@@ -65,14 +73,5 @@ be decomposed into a microservices architecture.
         - message
         * poster
         * article
-        - created_at
-        - updated_at
-
-    Notification
-        - _id
-        - type
-        - category
-        - message
-        * user
         - created_at
         - updated_at

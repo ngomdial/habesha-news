@@ -10,6 +10,7 @@ const baseUrl = process.env.BASE_URL + '/' + version;
 const username = 'saladthieves';
 const email = 'salad@mail.com';
 const password = 'awesomeness';
+const token = '1234567890abcdef';
 
 const categoryName = 'politics';
 const categoryColor = '00AAFF';
@@ -41,7 +42,7 @@ const votersUrls = '/voters';
 exports.data = {
     author, databaseUrl, version, baseUrl,
 
-    username, email, password,
+    username, email, password, token,
     usersUrl, usersLoginUrl, usersSignUpUrl,
 
     categoryName, categoryColor,

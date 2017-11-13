@@ -7,7 +7,7 @@ const data = require('../../config/data');
 
 describe('User Login Test', () => {
 
-    let {username, email, password} = data.data;
+    let {username, email, password, token} = data.data;
 
     let body;
 
@@ -41,7 +41,7 @@ describe('User Login Test', () => {
     });
 
     it('Should fail login if username and password are missing', () => {
-        return userConfig.login(undefined, ' ').then(res => {
+        return userConfig.login('', '').then(res => {
             body = res.body;
 
             expect(res.status).to.equal(400);

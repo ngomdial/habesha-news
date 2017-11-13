@@ -16,6 +16,8 @@ exports.create = (user, t = token) => {
     return request(app).post(devicesUrl).send({user, token: t});
 };
 
+exports.remove = id => request(app).delete(devicesUrl + '/' + id);
+
 exports.findAll = () => request(app).get(devicesUrl);
 
 exports.findOne = id => request(app).get(devicesUrl+ '/' + id);

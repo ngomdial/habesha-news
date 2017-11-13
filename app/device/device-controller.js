@@ -39,6 +39,14 @@ exports.create = (req, res) => {
         .catch(reject => result.errorReject(reject, res));
 };
 
+exports.remove = (req, res) => {
+    const device = req.device;
+    deviceDal.remove({_id: device._id})
+        .then(removed => {
+            result.message(`Device with _id ${device._id} has been removed`, res);
+        });
+};
+
 exports.validateOne = (req, res, next, id) => {
     deviceDal.findOne({_id: id})
         .then(device => {

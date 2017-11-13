@@ -21,5 +21,6 @@ router.use('/categories', require('../app/category/category-router'));
 router.use('/comments', require('../app/comment/comment-router'));
 router.use('/articles', require('../app/article/article-router'));
 router.use('/warnings', require('../app/warning/warning-router'));
+router.use('/devices', require('../app/device/device-router'));
 
 module.exports = router;

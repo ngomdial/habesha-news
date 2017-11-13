@@ -20,6 +20,7 @@ describe('User Controller Test', () => {
         return userConfig.findAll().then(res => {
             body = res.body;
 
+            expect(res.status).to.equal(200);
             expect(body).to.be.a('array');
             expect(body).to.have.lengthOf(0);
         });
@@ -57,11 +58,11 @@ describe('User Controller Test', () => {
             return userConfig.signUp().then(res => userConfig.findOne(new mongoose.mongo.ObjectId())).then(res => {
                 body = res.body;
 
-                expect(res.status).to.equal(400);
+                expect(res.status).to.equal(404);
                 expect(body).to.have.property('error').equal(true);
                 expect(body).to.have.property('message').contains('does not exist');
                 expect(body).to.have.property('message').contains('User with _id');
-                expect(body).to.have.property('status').equal(400);
+                expect(body).to.have.property('status').equal(404);
             });
         });
     });

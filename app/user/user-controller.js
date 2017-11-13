@@ -84,7 +84,7 @@ exports.validateOne = (req, res, next, id) => {
     userDal.findOne({_id: id})
         .then(user => {
             if (!user) {
-                result.error(`User with _id ${id} does not exist`, res);
+                result.errorStatus(`User with _id ${id} does not exist`, 404, res);
             } else {
                 req.user = user;
                 next();

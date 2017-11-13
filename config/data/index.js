@@ -39,10 +39,12 @@ const articlesUrl = baseUrl + '/articles';
 const followersUrl = '/followers';
 const votersUrls = '/voters';
 
+const devicesUrl = baseUrl + '/devices';
+
 exports.data = {
     author, databaseUrl, version, baseUrl,
 
-    username, email, password, token,
+    username, email, password,
     usersUrl, usersLoginUrl, usersSignUpUrl,
 
     categoryName, categoryColor,
@@ -54,5 +56,8 @@ exports.data = {
     warningsUrl,
 
     articleHeadline, sourceUrl, imageUrl, articleSummary,
-    articlesUrl, followersUrl, votersUrls
+    articlesUrl, followersUrl, votersUrls,
+
+    token,
+    devicesUrl
 };

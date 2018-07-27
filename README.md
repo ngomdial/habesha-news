@@ -75,3 +75,80 @@ be decomposed into a microservices architecture.
         * article
         - created_at
         - updated_at
+
+#### Services
+    Notification
+        - when a general notification arrives
+            - visible - always
+        - when someone posts a comment
+            - silent - if on comments page
+                {
+                    "type": "silent",
+                    "category": "comment",
+                    "target": "TARGET_ARTICLE_COMMENT_POSTED",
+                    "article": "{article_id}"
+                }
+            - visible - if off comments page and following article
+                {
+                    "type": "visible",
+                    "category": "comment",
+                    "target": "TARGET_ARTICLE_COMMENT_POSTED",
+                    "article": "{article_id}"
+                }
+        - when a new article has been added
+            - silent - if on home page
+                {
+                    "type": "silent",
+                    "category": "article",
+                    "target": "TARGET_HOME_PAGE"
+                }
+        - when info about an article changes
+            - when the status of an article changes
+                - silent - if on same page
+                    {
+                        "type": "silent",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_STATUS_CHANGED",
+                        "article": "{article_id}",
+                        "status_from": "pending",
+                        "status_to": "approved"
+                    }
+                - visible - if you posted the article
+                    {
+                        "type": "visible",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_STATUS_CHANGED",
+                        "article": "{article_id}",
+                        "status_from": "pending",
+                        "status_to": "approved"
+                    }
+            - when warning is added to an article
+                - silent - if on same page
+                    {
+                        "type": "silent",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_WARNING_ADDED",
+                        "article": "{article_id}"
+                    }
+                - visible - if you posted the article
+                    {
+                        "type": "visible",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_WARNING_ADDED",
+                        "article": "{article_id}"
+                    }
+            - when vote is added to an article
+                - silent - if on same page
+                    {
+                        "type": "silent",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_VOTE_ADDED",
+                        "article": "{article_id}"
+                    }
+                - visible - if you posted the article
+                    {
+                        "type": "visible",
+                        "category": "article",
+                        "target": "TARGET_ARTICLE_VOTE_ADDED",
+                        "article": "{article_id}"
+                    }

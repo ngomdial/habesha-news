@@ -98,5 +98,7 @@ exports.findOne = (req, res) => {
 
 exports.findAll = (req, res) => {
     return userDal.findAll()
-        .then(users => result.data(users, res));
+        .then(users => {
+            result.data(users, res)
+        });
 };

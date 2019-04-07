@@ -19,7 +19,7 @@ const articleSchema = new Schema({
         voters:     [{type: Schema.Types.ObjectId, ref: 'Voters'}]
     },
     {
-        timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+        timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, usePushEach: true
     }
 );
 

@@ -11,7 +11,7 @@ const commentSchema = new Schema({
         dislikes:   [{type: Schema.Types.ObjectId, ref: 'User'}]
     },
     {
-        timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+        timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}, usePushEach: true
     }
 );
 

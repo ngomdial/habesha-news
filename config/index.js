@@ -17,7 +17,7 @@ const connect = (databaseUrl = url) => {
     return mongoose
         .connect(databaseUrl, {useMongoClient: true})
         .then(() => {
-            console.log('Database connect');
+            console.log('Database connected');
             if (env === 'test') console.log(`Using test db: ${databaseUrl}`);
         })
         .catch(err => console.error('Database connection failed', err));
